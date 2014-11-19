@@ -1,6 +1,6 @@
 {
   "name": "language-log",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Log file syntax highlighting in Atom",
   "repository": "https://github.com/MRodalgaard/language-log",
   "homepage": "https://github.com/MRodalgaard/language-log",
