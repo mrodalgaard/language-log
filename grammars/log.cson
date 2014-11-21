@@ -11,17 +11,13 @@
   # Time stamp syntax
   {
     'match': '^[0-9.: \-]*?[0-9]{3}:? '
-    'captures':
-      '0':
-        'name': 'definition.comment.log'
+    'name': 'definition.comment.log'
   }
   
   # Android Log syntax
   {
     'match': '.* GC_FOR_ALLOC .*'
-    'captures':
-      '0':
-        'name': 'variable.parameter.gc-alloc.log'
+    'name': 'variable.parameter.gc-alloc.log'
   }
   {
     'match': '(?=.*?[(][0-9]+[)])([A|E]\/[a-zA-Z].+)'
@@ -30,27 +26,61 @@
         'name': 'definition.log.log-error'
   }
   {
-    'match': '(W\/.+?[0-9][)]:)|(D\/.+?[0-9][)]:)|(I\/.+?[0-9][)]:)|(V\/.+?[0-9][)]:)'
-    'captures':
-      '1':
-        'name': 'definition.log.log-warning'
-      '2':
-        'name': 'definition.log.log-debug'
-      '3':
-        'name': 'definition.log.log-info'
-      '4':
-        'name': 'definition.log.log-verbose'
+    'match': 'W\/.+?[0-9][)]'
+    'name': 'definition.log.log-warning'
+  }
+  {
+    'match': 'D\/.+?[0-9][)]'
+    'name': 'definition.log.log-debug'
+  }
+  {
+    'match': 'I\/.+?[0-9][)]'
+    'name': 'definition.log.log-info'
+  }
+  {
+    'match': 'V\/.+?[0-9][)]'
+    'name': 'definition.log.log-verbose'
   }
   
   # Nabto log syntax
   {
-    'match': '^\#'
-    'captures':
-      '0':
-        'name': 'definition.comment.log'
+    'match': '^\#.*'
+    'name': ''
+  }
+  {
+    'match': '\{00[0-9a-f]+\}'
+    'name': ''
+  }
+  {
+    'match': '\\[[A-Z_]+,(fatal|error)[^:]*'
+    'name': 'definition.log.log-error'
+  }
+  {
+    'match': '\\[[A-Z_]+,warn[^:]*'
+    'name': 'definition.log.log-warning'
+  }
+  {
+    'match': '\\[[A-Z_]+,info[^:]*'
+    'name': 'definition.log.log-info'
+  }
+  {
+    'match': '\\[[A-Z_]+,debug[^:]*'
+    'name': 'definition.log.log-debug'
+  }
+  {
+    'match': '\\[[A-Z_]+,(trace|thrd)[^:]*'
+    'name': 'definition.log.log-verbose'
   }
   
-  # Strings hightlight
+  # General syntax
+  {
+    'match': '[ \\[]\/[^ ,]+',
+    'name': 'keyword.log'
+  }
+  {
+    'match': ' [a-z]+:\/\/[^ ,]+'
+    'name': 'keyword.log'
+  }
   {
     'begin': '[\'"]'
     'beginCaptures':
