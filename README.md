@@ -11,8 +11,10 @@ This Atom grammar helps you quickly extract the log information that is importan
 ### Supported formats
 
  * [x] Android LogCat
+ * [x] Nabto Log
+ * [ ] iOS Log / Stack trace
+ * [ ] Firefox crash log
  * [ ] Syslog
- * [ ] Nabto Log
  * [ ] Common crash logs
 
 There are a whole bunch of standard and non-standard log formats out there. This is an attempt to reach the most common ones I run in to on a daily basis.
