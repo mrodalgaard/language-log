@@ -7,12 +7,16 @@
 # Try to fuzzy match a time stamp on first line
 'firstLineMatch': '^[0-9]{2}.?[0-9]{2}.?[0-9]{2}.?[0-9]{2}.[0-9]{2}.?[0-9]{2}.+'
 'patterns': [
+  
+  # Time stamp syntax
   {
-    'match': '^([0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3})'
+    'match': '^[0-9.: \-]*?[0-9]{3}:? '
     'captures':
       '0':
         'name': 'definition.comment.log'
   }
+  
+  # Android Log syntax
   {
     'match': '.* GC_FOR_ALLOC .*'
     'captures':
@@ -20,13 +24,13 @@
         'name': 'variable.parameter.gc-alloc.log'
   }
   {
-    'match': ': ([A|E]\/.+)'
+    'match': '(?=.*?[(][0-9]+[)])([A|E]\/[a-zA-Z].+)'
     'captures':
       '1':
         'name': 'definition.log.log-error'
   }
   {
-    'match': ': (W\/.+?:)|(D\/.+?:)|(I\/.+?:)|(V\/.+?:)'
+    'match': '(W\/.+?[0-9][)]:)|(D\/.+?[0-9][)]:)|(I\/.+?[0-9][)]:)|(V\/.+?[0-9][)]:)'
     'captures':
       '1':
         'name': 'definition.log.log-warning'
@@ -37,6 +41,16 @@
       '4':
         'name': 'definition.log.log-verbose'
   }
+  
+  # Nabto log syntax
+  {
+    'match': '^\#'
+    'captures':
+      '0':
+        'name': 'definition.comment.log'
+  }
+  
+  # Strings hightlight
   {
     'begin': '[\'"]'
     'beginCaptures':
