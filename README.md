@@ -15,9 +15,9 @@ This Atom grammar helps you quickly extract the log information that is importan
  * [x] iOS Log / Stack trace
  * [x] Firefox crash log (use json raw dump)
  * [x] IDEA log
- * [ ] Apache
- * [ ] Syslog
- * [ ] Common crash logs
+ * [x] Apache
+ * [x] Syslog
+ * [x] Common crash logs
 
 There are a whole bunch of standard and non-standard log formats out there. This is an attempt to reach the most common ones I run in to on a daily basis.
 
