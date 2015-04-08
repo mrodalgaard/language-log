@@ -8,9 +8,27 @@
 'firstLineMatch': '^[0-9]{2}.?[0-9]{2}.?[0-9]{2}.?[0-9]{2}.[0-9]{2}.?[0-9]{2}.+'
 'patterns': [
   
+  # General syntax
+  {
+    'match': '[ \\[]\/[^ ,]+',
+    'name': 'keyword.log'
+  }
+  {
+    'match': ' [a-z]+:\/\/[^ ,]+'
+    'name': 'keyword.log'
+  }
+  {
+    'match': '".*?"'
+    'name': 'keyword.log'
+  }
+  {
+    'match': '\'.*?\''
+    'name': 'keyword.log'
+  }
+  
   # Time stamp syntax
   {
-    'match': '^[0-9.: \-]*?[0-9]{3}:? '
+    'match': '^[0-9.,: \-]*?[0-9]{3}[:]? '
     'name': 'definition.comment.log'
   }
   
@@ -20,28 +38,50 @@
     'name': 'variable.parameter.gc-alloc.log'
   }
   {
-    'match': '(?=.*?[(][0-9]+[)])([A|E]\/[a-zA-Z].+)'
-    'captures':
-      '1':
-        'name': 'definition.log.log-error'
+    'match': '[A|E]\/.*?[﹕|:]'
+    'name': 'definition.log.log-error'
   }
   {
-    'match': 'W\/.+?[0-9][)]'
+    'match': 'W\/.*?[﹕|:]'
     'name': 'definition.log.log-warning'
   }
   {
-    'match': 'D\/.+?[0-9][)]'
+    'match': 'D\/.*?[﹕|:]'
     'name': 'definition.log.log-debug'
   }
   {
-    'match': 'I\/.+?[0-9][)]'
+    'match': 'I\/.*?[﹕|:]'
     'name': 'definition.log.log-info'
   }
   {
-    'match': 'V\/.+?[0-9][)]'
+    'match': 'V\/.*?[﹕|:]'
     'name': 'definition.log.log-verbose'
   }
   
+  # iOS log syntax
+  {
+    'match': '^[A-Z]+[a-zA-Z0-9\/ ]*?:'
+    'name': 'definition.log.log-verbose'
+  }
+  {
+    'match': '[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'
+    'name': 'keyword.log'
+  }
+  
+  # IDEA log
+  {
+    'match': '\\[[0-9\ ]*\\].*ERROR ?'
+    'name': 'definition.log.log-error'
+  }
+  {
+    'match': '\\[[0-9\ ]*\\].*WARN ?'
+    'name': 'definition.log.log-warning'
+  }
+  {
+    'match': '\\[[0-9\ ]*\\].*INFO ?'
+    'name': 'definition.log.log-info'
+  }
+
   # Nabto log syntax
   {
     'match': '^\#.*'
@@ -70,32 +110,5 @@
   {
     'match': '\\[[A-Z_]+,(trace|thrd)[^:]*'
     'name': 'definition.log.log-verbose'
-  }
-  
-  # General syntax
-  {
-    'match': '[ \\[]\/[^ ,]+',
-    'name': 'keyword.log'
-  }
-  {
-    'match': ' [a-z]+:\/\/[^ ,]+'
-    'name': 'keyword.log'
-  }
-  {
-    'begin': '[\'"]'
-    'beginCaptures':
-      '0':
-        'name': 'definition.string.begin.log'
-    'end': '[\'"]'
-    'endCaptures':
-      '0':
-        'name': 'definition.string.end.log'
-    'name': 'string.quoted.single.log'
-    'patterns': [
-      {
-        'match': '\\\\.'
-        'name': 'constant.character.escape.log'
-      }
-    ]
   }
 ]

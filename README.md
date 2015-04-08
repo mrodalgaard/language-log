@@ -12,8 +12,10 @@ This Atom grammar helps you quickly extract the log information that is importan
 
  * [x] Android LogCat
  * [x] Nabto Log
- * [ ] iOS Log / Stack trace
- * [ ] Firefox crash log
+ * [x] iOS Log / Stack trace
+ * [x] Firefox crash log (use json raw dump)
+ * [x] IDEA log
+ * [ ] Apache
  * [ ] Syslog
  * [ ] Common crash logs
 
