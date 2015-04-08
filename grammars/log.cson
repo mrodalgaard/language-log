@@ -35,6 +35,10 @@
     'match': '^[0-9\.]* - -?'
     'name': 'definition.comment.log'
   }
+  {
+    'match': '^\\[[A-Za-z0-9 :]+\\]?'
+    'name': 'definition.comment.log'
+  }
   
   # Android Log syntax
   {
@@ -86,7 +90,7 @@
     'name': 'definition.log.log-info'
   }
   
-  # Apache
+  # Apache access log
   {
     'match': ' ([4|5][0-9]{2}) [0-9]*$'
     'captures':
@@ -98,6 +102,20 @@
     'captures':
       '1':
         'name': 'definition.log.log-success'
+  }
+  
+  # Apache error log
+  {
+    'match': '\\[error\\]'
+    'name': 'definition.log.log-error'
+  }
+  {
+    'match': '\\[info\\]'
+    'name': 'definition.log.log-info'
+  }
+  {
+    'match': '\\[notice\\]'
+    'name': 'definition.log.log-verbose'
   }
 
   # Nabto log syntax
