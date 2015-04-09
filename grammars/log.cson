@@ -7,144 +7,172 @@
 # Try to fuzzy match a time stamp on first line
 'firstLineMatch': '^[0-9]{2}.?[0-9]{2}.?[0-9]{2}.?[0-9]{2}.[0-9]{2}.?[0-9]{2}.+'
 'patterns': [
-  
-  # General syntax
   {
-    'match': '[ \\[]\/[^ ,]+',
-    'name': 'keyword.log'
+    'include': '#general'
   }
   {
-    'match': ' [a-z]+:\/\/[^ ,]+'
-    'name': 'keyword.log'
+    'include': '#timestamps'
   }
   {
-    'match': '".*?"'
-    'name': 'keyword.log'
+    'include': '#android'
   }
   {
-    'match': '\'.*?\''
-    'name': 'keyword.log'
-  }
-  
-  # Time stamp syntax
-  {
-    'match': '^[0-9.,: \-]*?[0-9]{3}[:]? '
-    'name': 'definition.comment.log'
+    'include': '#ios'
   }
   {
-    'match': '^[0-9\.]* - -?'
-    'name': 'definition.comment.log'
+    'include': '#idea'
   }
   {
-    'match': '^\\[[A-Za-z0-9 :]+\\]?'
-    'name': 'definition.comment.log'
-  }
-  
-  # Android Log syntax
-  {
-    'match': '.* GC_FOR_ALLOC .*'
-    'name': 'variable.parameter.gc-alloc.log'
+    'include': '#apache'
   }
   {
-    'match': '[A|E]\/.*?[﹕|:]'
-    'name': 'definition.log.log-error'
-  }
-  {
-    'match': 'W\/.*?[﹕|:]'
-    'name': 'definition.log.log-warning'
-  }
-  {
-    'match': 'D\/.*?[﹕|:]'
-    'name': 'definition.log.log-debug'
-  }
-  {
-    'match': 'I\/.*?[﹕|:]'
-    'name': 'definition.log.log-info'
-  }
-  {
-    'match': 'V\/.*?[﹕|:]'
-    'name': 'definition.log.log-verbose'
-  }
-  
-  # iOS log syntax
-  {
-    'match': '^[A-Z]+[a-zA-Z0-9\/ ]*?:'
-    'name': 'definition.log.log-verbose'
-  }
-  {
-    'match': '[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'
-    'name': 'keyword.log'
-  }
-  
-  # IDEA log
-  {
-    'match': '\\[[0-9\ ]*\\].*ERROR ?'
-    'name': 'definition.log.log-error'
-  }
-  {
-    'match': '\\[[0-9\ ]*\\].*WARN ?'
-    'name': 'definition.log.log-warning'
-  }
-  {
-    'match': '\\[[0-9\ ]*\\].*INFO ?'
-    'name': 'definition.log.log-info'
-  }
-  
-  # Apache access log
-  {
-    'match': ' ([4|5][0-9]{2}) [0-9]*$'
-    'captures':
-      '1':
-        'name': 'definition.log.log-failed'
-  }
-  {
-    'match': ' ([2|3]0[0-9]{1}) [0-9]*$'
-    'captures':
-      '1':
-        'name': 'definition.log.log-success'
-  }
-  
-  # Apache error log
-  {
-    'match': '\\[error\\]'
-    'name': 'definition.log.log-error'
-  }
-  {
-    'match': '\\[info\\]'
-    'name': 'definition.log.log-info'
-  }
-  {
-    'match': '\\[notice\\]'
-    'name': 'definition.log.log-verbose'
-  }
-
-  # Nabto log syntax
-  {
-    'match': '^\#.*'
-    'name': ''
-  }
-  {
-    'match': '\{00[0-9a-f]+\}'
-    'name': ''
-  }
-  {
-    'match': '\\[[A-Z_]+,(fatal|error)[^:]*'
-    'name': 'definition.log.log-error'
-  }
-  {
-    'match': '\\[[A-Z_]+,warn[^:]*'
-    'name': 'definition.log.log-warning'
-  }
-  {
-    'match': '\\[[A-Z_]+,info[^:]*'
-    'name': 'definition.log.log-info'
-  }
-  {
-    'match': '\\[[A-Z_]+,debug[^:]*'
-    'name': 'definition.log.log-debug'
-  }
-  {
-    'match': '\\[[A-Z_]+,(trace|thrd)[^:]*'
-    'name': 'definition.log.log-verbose'
+    'include': '#nabto'
   }
 ]
+
+'repository':
+  'general':
+    'patterns': [
+      {
+        'match': '[ \\[]\/[^ ,]+',
+        'name': 'keyword.log'
+      }
+      {
+        'match': ' [a-z]+:\/\/[^ ,]+'
+        'name': 'keyword.log'
+      }
+      {
+        'match': '".*?"'
+        'name': 'keyword.log'
+      }
+      {
+        'match': '\'.*?\''
+        'name': 'keyword.log'
+      }
+    ]
+  'timestamps':
+    'patterns': [
+      {
+        'match': '^[0-9.,: \-]*?[0-9]{3}[:]? '
+        'name': 'definition.comment.log'
+      }
+      {
+        'match': '^[0-9\.]* - -?'
+        'name': 'definition.comment.log'
+      }
+      {
+        'match': '^\\[[A-Za-z0-9 :]+\\]?'
+        'name': 'definition.comment.log'
+      }
+    ]
+  'android':
+    'patterns': [
+      {
+        'match': '.* GC_FOR_ALLOC .*'
+        'name': 'variable.parameter.gc-alloc.log'
+      }
+      {
+        'match': '[A|E]\/.*?[﹕|:]'
+        'name': 'definition.log.log-error'
+      }
+      {
+        'match': 'W\/.*?[﹕|:]'
+        'name': 'definition.log.log-warning'
+      }
+      {
+        'match': 'D\/.*?[﹕|:]'
+        'name': 'definition.log.log-debug'
+      }
+      {
+        'match': 'I\/.*?[﹕|:]'
+        'name': 'definition.log.log-info'
+      }
+      {
+        'match': 'V\/.*?[﹕|:]'
+        'name': 'definition.log.log-verbose'
+      }
+    ]
+  'ios':
+    'patterns': [
+      {
+        'match': '^[A-Z]+[a-zA-Z0-9\/ ]*?:'
+        'name': 'definition.log.log-verbose'
+      }
+      {
+        'match': '[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'
+        'name': 'keyword.log'
+      }
+    ]
+  'idea':
+    'patterns': [
+      {
+        'match': '\\[[0-9\ ]*\\].*ERROR ?'
+        'name': 'definition.log.log-error'
+      }
+      {
+        'match': '\\[[0-9\ ]*\\].*WARN ?'
+        'name': 'definition.log.log-warning'
+      }
+      {
+        'match': '\\[[0-9\ ]*\\].*INFO ?'
+        'name': 'definition.log.log-info'
+      }
+    ]
+  'apache':
+    'pattern': [
+      {
+        'match': ' ([4|5][0-9]{2}) [0-9]*$'
+        'captures':
+          '1':
+            'name': 'definition.log.log-failed'
+      }
+      {
+        'match': ' ([2|3]0[0-9]{1}) [0-9]*$'
+        'captures':
+          '1':
+            'name': 'definition.log.log-success'
+      }
+      {
+        'match': '\\[error\\]'
+        'name': 'definition.log.log-error'
+      }
+      {
+        'match': '\\[info\\]'
+        'name': 'definition.log.log-info'
+      }
+      {
+        'match': '\\[notice\\]'
+        'name': 'definition.log.log-verbose'
+      }
+    ]
+  'nabto':
+    'patterns': [
+      {
+        'match': '^\#.*'
+        'name': ''
+      }
+      {
+        'match': '\{00[0-9a-f]+\}'
+        'name': ''
+      }
+      {
+        'match': '\\[[A-Z_]+,(fatal|error)[^:]*'
+        'name': 'definition.log.log-error'
+      }
+      {
+        'match': '\\[[A-Z_]+,warn[^:]*'
+        'name': 'definition.log.log-warning'
+      }
+      {
+        'match': '\\[[A-Z_]+,info[^:]*'
+        'name': 'definition.log.log-info'
+      }
+      {
+        'match': '\\[[A-Z_]+,debug[^:]*'
+        'name': 'definition.log.log-debug'
+      }
+      {
+        'match': '\\[[A-Z_]+,(trace|thrd)[^:]*'
+        'name': 'definition.log.log-verbose'
+      }
+    ]
