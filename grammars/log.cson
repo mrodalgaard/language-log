@@ -4,8 +4,9 @@
   'txt',
   'log'
 ]
-# Try to fuzzy match a time stamp on first line
-'firstLineMatch': '^[0-9]{2}.?[0-9]{2}.?[0-9]{2}.?[0-9]{2}.[0-9]{2}.?[0-9]{2}.+'
+# Try to match a time stamp on first line
+'firstLineMatch': '^[0-9]{2,}[-.: ]?[0-9]{2,}[-.: ]?[0-9]{2,}[-.: ]?[0-9]{2,}[-.: ]?'
+
 'patterns': [
   {
     'include': '#general'
@@ -34,10 +35,12 @@
   'general':
     'patterns': [
       {
+        'comment': 'paths'
         'match': '[ \\[]\/[^ ,]+',
         'name': 'keyword.log'
       }
       {
+        'comment': 'urls'
         'match': ' [a-z]+:\/\/[^ ,]+'
         'name': 'keyword.log'
       }
