@@ -18,6 +18,7 @@ This Atom grammar helps you quickly extract the log information that is importan
  * [x] Apache
  * [x] Syslog
  * [x] Common crash logs
+ * [ ] Common system logs from e.g. ~/Library/Logs/
 
 There are a whole bunch of standard and non-standard log formats out there. This is an attempt to reach the most common ones I run in to on a daily basis.
 
