@@ -1,8 +1,13 @@
 {
   "name": "language-log",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Log file syntax highlighting in Atom",
-  "keywords": ["log", "syntax", "highlight", "syslog"],
+  "keywords": [
+    "log",
+    "syntax",
+    "highlight",
+    "syslog"
+  ],
   "repository": "https://github.com/MRodalgaard/language-log",
   "homepage": "https://github.com/MRodalgaard/language-log",
   "license": "MIT",
