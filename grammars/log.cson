@@ -32,38 +32,52 @@
   {
     'include': '#adobe'
   }
+  {
+    'include': '#google'
+  }
+  {
+    'include': '#apple'
+  }
 ]
 
 'repository':
   'general':
     'patterns': [
       {
-        'comment': 'paths'
-        'match': '[ \\[]\/[^ ,]+',
-        'name': 'keyword.log'
+        'match': '[\\s\\[=](\/[^ ,>]+)',
+        'captures':
+          '1': 'name': 'keyword.log.path'
       }
       {
-        'comment': 'urls'
-        'match': ' [a-z]+:\/\/[^ ,]+'
-        'name': 'keyword.log'
+        'match': '\\b[a-z]+:\/\/[^ ,]+'
+        'name': 'keyword.log.url'
       }
       {
-        'match': '".*?"'
-        'name': 'keyword.log'
+        'match': '[“"].*?["”]'
+        'name': 'log.string.double'
       }
       {
         'match': '\'.*?\''
-        'name': 'keyword.log'
+        'name': 'log.string.single'
+      }
+      {
+        'match': '^\#.*'
+        'name': 'definition.log.comment.line.number-sign'
       }
     ]
   'timestamps':
     'patterns': [
       {
-        'match': '^[0-9.,:/\\-]+ ?[0-9.,:/\\-]+'
+        'match': '((([A-Z][a-z]{2}\\s\\s?){1,2})|(^[0-9]{2}))[0-9./-]+ ?([A-Z]
+        [a-z]{2} [0-9]{4} )?[0-9T.,:\\-\\+\\|]+(?= )( -)?( 20[0-9]{2} :)?'
         'name': 'definition.comment.timestamp.log'
       }
       {
-        'match': '^\\[[A-Za-z0-9 :]+\\]?'
+        'match': '^\\[[A-Za-z0-9 .:]+\\]?'
+        'name': 'definition.comment.timestamp.log'
+      }
+      {
+        'match': '^(localhost|::1) - -'
         'name': 'definition.comment.timestamp.log'
       }
     ]
@@ -102,34 +116,34 @@
       }
       {
         'match': '[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}'
-        'name': 'keyword.log'
+        'name': 'keyword.log.serial'
       }
     ]
   'idea':
     'patterns': [
       {
-        'match': '\\[[0-9\ ]*\\].*ERROR ?'
+        'match': '\\[[0-9\ ]*\\].*ERROR(?= )'
         'name': 'definition.log.log-error'
       }
       {
-        'match': '\\[[0-9\ ]*\\].*WARN ?'
+        'match': '\\[[0-9\ ]*\\].*WARN(?= )'
         'name': 'definition.log.log-warning'
       }
       {
-        'match': '\\[[0-9\ ]*\\].*INFO ?'
+        'match': '\\[[0-9\ ]*\\].*INFO(?= )'
         'name': 'definition.log.log-info'
       }
     ]
   'apache':
     'patterns': [
       {
-        'match': ' ([4|5][0-9]{2}) [0-9]*$'
+        'match': '\\b([4|5][0-9]{2}) [0-9]*$'
         'captures':
           '1':
             'name': 'definition.log.log-failed'
       }
       {
-        'match': ' ([2|3]0[0-9]{1}) [0-9]*$'
+        'match': '\\b([2|3]0[0-9]{1}) [0-9]*$'
         'captures':
           '1':
             'name': 'definition.log.log-success'
@@ -162,12 +176,8 @@
   'nabto':
     'patterns': [
       {
-        'match': '^\#.*'
-        'name': ''
-      }
-      {
         'match': '\{00[0-9a-f]+\}'
-        'name': ''
+        'name': 'definition.log.comment.location'
       }
       {
         'match': '\\[[A-Z_]+,(fatal|error)[^:]*'
@@ -200,5 +210,35 @@
         'begin': '<CommandLineArguments>'
         'end': '</CommandLineArguments>'
         'name': 'entity.name.tag'
+      }
+    ]
+  'google':
+    'patterns': [
+      {
+        'match': '\\[lvl=3\\]'
+        'name': 'definition.log.log-error'
+      }
+      {
+        'match': '\\[lvl=2\\]'
+        'name': 'definition.log.log-warning'
+      }
+      {
+        'match': '\\[lvl=1\\]'
+        'name': 'definition.log.log-info'
+      }
+    ]
+  'apple':
+    'patterns': [
+      {
+        'match': '<Critical>'
+        'name': 'definition.log.log-error'
+      }
+      {
+        'match': '<Info>'
+        'name': 'definition.log.log-info'
+      }
+      {
+        'match': '\\b[0-1]\.[0-9]+%'
+        'name': 'constant.numeric.log'
       }
     ]
