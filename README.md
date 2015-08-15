@@ -1,12 +1,10 @@
-# Log file syntax highlighting in Atom
+# Log syntax highlighting in Atom
 
-Adds syntax highlighting colors for common log formats in Atom. Improving visual grepping.
+Adds syntax colors for common log formats in [Atom](https://atom.io/) - improving visual grepping.
 
-## Use Case
+![language-log](https://raw.githubusercontent.com/mrodalgaard/language-log/master/screenshots/preview.png)
 
-I often get random logs sent to me for analyzing system behavior. These include crash reports, stack traces, system logs and ad-hoc loggings from different IDEs using dissimilar logging formats. Every time I look for the same keywords (error, exception, exit), check previous line's logging level (info, warning, error) and compare time stamps.
-
-This Atom grammar helps you quickly extract the log information that is important.
+An Atom grammar that helps you quickly extract the important parts of various log files.
 
 ## Supported formats
 
@@ -20,7 +18,7 @@ This Atom grammar helps you quickly extract the log information that is importan
  * [x] Common crash logs
  * [x] Common system logs from e.g. ~/Library/Logs/
 
-There are a whole bunch of standard and non-standard log formats out there. This is an attempt to reach the most common I run in to on a weekly basis.
+There are a whole bunch of standard and non-standard log formats out there. This is an attempt to reach the most common I bump into on a weekly basis.
 
 ## Notes
 
