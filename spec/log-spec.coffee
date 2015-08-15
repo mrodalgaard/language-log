@@ -48,6 +48,11 @@ describe 'Atom log grammar', ->
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[2]).toEqual value: '[ 216318]   WARN', scopes: ['source.log', 'definition.log.log-warning']
 
+    line = '["your-protocol"] will handle following links: your-protocol://open?file=file&line=line stop'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[1]).toEqual value: '"your-protocol"', scopes: ['source.log', 'log.string.double']
+    expect(tokens[3]).toEqual value: 'your-protocol://open?file=file&line=line', scopes: ['source.log', 'keyword.log.url']
+
   it 'parses Apache logs', ->
     line = '64.242.88.10 - - [07/Mar/2004:16:24:16 -0800] "GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1" 200 4924'
     {tokens} = grammar.tokenizeLine(line)
@@ -95,6 +100,10 @@ describe 'Atom log grammar', ->
     line = '141121-14:00:26.130 {000000010459f000} [___DEFAULT,error] api_request_handler.cpp(59):         An error occurred when handling url demo1.nabduino.net: 2000042'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[4]).toEqual value: '[___DEFAULT,error] api_request_handler.cpp(59)', scopes: ['source.log', 'definition.log.log-error']
+
+    line = '150813-17:43:26.552 {00007fff74190300} [_______APP,info_] nabto_client_facade.cpp(635):        fetchUrl(nabto://demo.nabto.net/wind_speed.json?) ended (with success) in 0.001148 seconds, result length is 70'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[6]).toEqual value: 'nabto://demo.nabto.net/wind_speed.json?', scopes: ['source.log', 'keyword.log.url']
 
   it 'parses Adobe logs', ->
     line = '04/25/15 14:51:34:414 | [INFO] |  | OOBE | DE |  |  |  | 2424952 | Visit http://www.adobe.com/go/loganalyzer/ for more information'

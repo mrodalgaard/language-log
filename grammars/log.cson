@@ -52,7 +52,7 @@
           '1': 'name': 'keyword.log.path'
       }
       {
-        'match': '\\b[a-z]+:\/\/[^ ,]+'
+        'match': '\\b[a-z\-]+:\/\/[^,)\\s]+'
         'name': 'keyword.log.url'
       }
       {
