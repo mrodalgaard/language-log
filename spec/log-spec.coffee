@@ -216,7 +216,7 @@ describe 'Atom log grammar', ->
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '2015-08-15 00:21:09', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: 'Info', scopes: ['source.log', 'definition.log.log-info']
-    expect(tokens[3]).toEqual value: '                  CSI', scopes: ['source.log', 'entity.log.csi.other']
+    expect(tokens[3]).toEqual value: '                  CSI', scopes: ['source.log', 'entity.log.csi']
 
     line = '2015-08-15 00:12:17, Info                  CBS    Loaded Servicing Stack v10.0.10240.16384 with Core: C:\\WINDOWS\\winsxs\\amd64_microsoft-windows\\cbscore.dll PATH'
     {tokens} = grammar.tokenizeLine(line)
@@ -229,12 +229,16 @@ describe 'Atom log grammar', ->
 
     line = '2015-08-13 11:50:15, Info                  DPX    Started DPX phase: Resume and Download Job'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[3]).toEqual value: '                  DPX', scopes: ['source.log', 'entity.log.csi.other']
+    expect(tokens[3]).toEqual value: '                  DPX', scopes: ['source.log', 'entity.log.csi']
 
     line = '2014-10-21 14:17:10, Info                  DISM   Service Pack Cleanup UI: PID=4704 WAU editions installed 2  -'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[3]).toEqual value: '                  DISM', scopes: ['source.log', 'entity.log.csi.other']
+    expect(tokens[3]).toEqual value: '                  DISM', scopes: ['source.log', 'variable.log.dism']
 
-    line = '2014-10-21 14:17:52, Info                  CBS    DC: tree root as a root relative path: \\Windows\\winsxs\\x86_microsoft-win_none_bb705a'
+    line = '2014-10-21 14:17:52, Info                  CBS    DC: tree root as a root relative path: c\\Windows\\winsxs\\x86_microsoft-win_none_bb705a'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[5]).toEqual value: '\\Windows\\winsxs\\x86_microsoft-win_none_bb705a', scopes: ['source.log', 'keyword.log.path.win']
+
+    line = '2011-09-26 09:43:58, Info                  DPX    CreateFileW failed, FileName:\\\\?\\C:\\Windows\\temp\\$dpx$.tmp\\job.xml, Error:0x80070002'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[5]).toEqual value: 'C:\\Windows\\temp\\$dpx$.tmp\\job.xml', scopes: ['source.log', 'keyword.log.path.win']

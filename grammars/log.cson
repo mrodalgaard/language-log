@@ -28,12 +28,12 @@
   'general':
     'patterns': [
       {
-        'match': '[\\s\\[=](\/[^ ,>]+)',
+        'match': '[\\s\\[=](\/[^ ,>]+)'
         'captures':
           '1': 'name': 'keyword.log.path'
       }
       {
-        'match': '([A-Za-z]{1}:)?\\\\[\\\\\\w.-]*'
+        'match': '\\b([A-Za-z]{1}:)?\\\\[\\\\\\w.\\-$]+'
         'name': 'keyword.log.path.win'
       }
       {
@@ -259,12 +259,16 @@
   'cbs':
     'patterns': [
       {
-        'match': '\\s{4,}(CBS)\\b',
+        'match': '\\s{4,}(CBS)\\b'
         'name': 'constant.log.cbs'
       }
       {
-        'match': '\\s{4,}(CSI|DPX|DISM)\\b'
-        'name': 'entity.log.csi.other'
+        'match': '\\s{4,}(CSI|DPX)\\b'
+        'name': 'entity.log.csi'
+      }
+      {
+        'match': '\\s{4,}(DISM)\\b'
+        'name': 'variable.log.dism'
       }
       {
         'match': '[0-9-]{10} [0-9:.]{12}'
