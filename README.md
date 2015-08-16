@@ -15,6 +15,7 @@ An Atom grammar that helps you quickly extract the important parts of various lo
  * [x] IDEA log
  * [x] Apache
  * [x] Syslog
+ * [x] Windows CBS logs
  * [x] Common crash logs
  * [x] Common system logs from e.g. ~/Library/Logs/
 
@@ -22,9 +23,9 @@ There are a whole bunch of standard and non-standard log formats out there. This
 
 ## Notes
 
-A great companion to this package is [tail](https://github.com/eliasak/tail) for live viewing logs. See [here](https://github.com/mrodalgaard/language-log/issues/1#issue-92097844) for a good way to integrate.
+Log files above 10,000 lines does not get grammar applied according to Atom.
 
-<br>
+A great companion to this package is [tail](https://github.com/eliasak/tail) for live viewing logs. See [here](https://github.com/mrodalgaard/language-log/issues/1#issue-92097844) for a good way to integrate.
 
 > Contributions, bug reports and feature requests are very welcome.
 

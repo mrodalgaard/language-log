@@ -11,36 +11,17 @@
 'firstLineMatch': '^[0-9]{2,}[-.:/ ]?[0-9]{2,}[-.:/ ]?[0-9]{2,}[-.: ]?[0-9]{2,}[-.: ]?'
 
 'patterns': [
-  {
-    'include': '#general'
-  }
-  {
-    'include': '#timestamps'
-  }
-  {
-    'include': '#android'
-  }
-  {
-    'include': '#ios'
-  }
-  {
-    'include': '#idea'
-  }
-  {
-    'include': '#apache'
-  }
-  {
-    'include': '#nabto'
-  }
-  {
-    'include': '#adobe'
-  }
-  {
-    'include': '#google'
-  }
-  {
-    'include': '#apple'
-  }
+  {'include': '#general'}
+  {'include': '#timestamps'}
+  {'include': '#android'}
+  {'include': '#ios'}
+  {'include': '#idea'}
+  {'include': '#apache'}
+  {'include': '#nabto'}
+  {'include': '#adobe'}
+  {'include': '#google'}
+  {'include': '#apple'}
+  {'include': '#cbs'}
 ]
 
 'repository':
@@ -50,6 +31,10 @@
         'match': '[\\s\\[=](\/[^ ,>]+)',
         'captures':
           '1': 'name': 'keyword.log.path'
+      }
+      {
+        'match': '\\b[A-Za-z]{1}:\\\\[\\\\\\w.-]*'
+        'name': 'keyword.log.path.win'
       }
       {
         'match': '\\b[a-z\-]+:\/\/[^,)\\s]+'
@@ -67,12 +52,26 @@
         'match': '^\#.*'
         'name': 'definition.log.comment.line.number-sign'
       }
+      {
+        'match': '\\bv(.?)[0-9]+.[0-9]+[0-9.]*\\b'
+        'name': 'keyword.log.version'
+      }
+      {
+        'match': '\\bversion [0-9]+.[0-9]+[0-9.]*\\b'
+        'name': 'keyword.log.version'
+      }
     ]
   'timestamps':
     'patterns': [
       {
-        'match': '((([A-Z][a-z]{2}\\s\\s?){1,2})|(^[0-9]{2}))[0-9./-]+ ?([A-Z]
-        [a-z]{2} [0-9]{4} )?[0-9T.,:\\-\\+\\|]+(?= )( -)?( 20[0-9]{2} :)?'
+        'match': '\
+        ((([A-Z][a-z]{2}\\s\\s?){1,2})|(^[0-9]{2}))\
+        [0-9./-]+ ?\
+        ([A-Z][a-z]{2} [0-9]{4} )?\
+        [0-9T.:\\-\\+\\|]+\
+        (,[0-9]{3})?\
+        ( -)?\
+        ( 20[0-9]{2} :)?'
         'name': 'definition.comment.timestamp.log'
       }
       {
@@ -233,15 +232,34 @@
   'apple':
     'patterns': [
       {
-        'match': '<Critical>'
+        'match': '(<?)\\b(Error|Critical)\\b(>?)'
         'name': 'definition.log.log-error'
       }
       {
-        'match': '<Info>'
+        'match': '(<?)\\bWarning\\b(>?)'
+        'name': 'definition.log.log-warning'
+      }
+      {
+        'match': '(<?)\\bInfo\\b(>?)'
         'name': 'definition.log.log-info'
       }
       {
         'match': '\\b[0-1]\.[0-9]+%'
         'name': 'constant.numeric.log'
+      }
+    ]
+  'cbs':
+    'patterns': [
+      {
+        'match': '\\bCBS\\b'
+        'name': 'constant.log.cbs'
+      }
+      {
+        'match': '\\b(CSI|DPX)\\b'
+        'name': 'entity.log.csi.dpx'
+      }
+      {
+        'match': '[0-9-]{10} [0-9:.]{12}'
+        'name': 'definition.comment.timestamp.log.inline'
       }
     ]
