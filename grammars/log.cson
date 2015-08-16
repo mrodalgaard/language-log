@@ -33,7 +33,7 @@
           '1': 'name': 'keyword.log.path'
       }
       {
-        'match': '\\b[A-Za-z]{1}:\\\\[\\\\\\w.-]*'
+        'match': '([A-Za-z]{1}:)?\\\\[\\\\\\w.-]*'
         'name': 'keyword.log.path.win'
       }
       {
@@ -232,16 +232,24 @@
   'apple':
     'patterns': [
       {
-        'match': '(<?)\\b(Error|Critical)\\b(>?)'
+        'match': '(<?)\\b(Error|ERROR|Critical|CRITICAL)\\b(>?)'
         'name': 'definition.log.log-error'
       }
       {
-        'match': '(<?)\\bWarning\\b(>?)'
+        'match': '(<?)\\b(Warning|WARNING)\\b(>?)'
         'name': 'definition.log.log-warning'
       }
       {
-        'match': '(<?)\\bInfo\\b(>?)'
+        'match': '(<?)\\b(Info|INFO)\\b(>?)'
         'name': 'definition.log.log-info'
+      }
+      {
+        'match': '(<?)\\b(Debug|DEBUG)\\b(>?)'
+        'name': 'definition.log.log-debug'
+      }
+      {
+        'match': '(<?)\\b(Verbose|VERBOSE)\\b(>?)'
+        'name': 'definition.log.log-verbose'
       }
       {
         'match': '\\b[0-1]\.[0-9]+%'
@@ -251,12 +259,12 @@
   'cbs':
     'patterns': [
       {
-        'match': '\\bCBS\\b'
+        'match': '\\s{4,}(CBS)\\b',
         'name': 'constant.log.cbs'
       }
       {
-        'match': '\\b(CSI|DPX)\\b'
-        'name': 'entity.log.csi.dpx'
+        'match': '\\s{4,}(CSI|DPX|DISM)\\b'
+        'name': 'entity.log.csi.other'
       }
       {
         'match': '[0-9-]{10} [0-9:.]{12}'

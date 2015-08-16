@@ -25,6 +25,14 @@ describe 'Atom log grammar', ->
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[2]).toEqual value: 'z:\\windows\\random\\', scopes: ['source.log', 'keyword.log.path.win']
 
+    line = '12-34 WARNING: this is a warning'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[2]).toEqual value: 'WARNING', scopes: ['source.log', 'definition.log.log-warning']
+
+    line = '12-34 Some random <Verbose> text'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[2]).toEqual value: '<Verbose>', scopes: ['source.log', 'definition.log.log-verbose']
+
   it 'parses Android logs', ->
     line = '11-13 05:51:49.819: E/SoundPool(): error loading /system/media/audio/ui/Effect_Tick.ogg'
     {tokens} = grammar.tokenizeLine(line)
@@ -201,19 +209,19 @@ describe 'Atom log grammar', ->
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '2015-08-14 05:50:12', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: 'Info', scopes: ['source.log', 'definition.log.log-info']
-    expect(tokens[4]).toEqual value: 'CBS', scopes: ['source.log', 'constant.log.cbs']
-    expect(tokens[6]).toEqual value: '2015-08-14 03:49:58.302', scopes: ['source.log', 'definition.comment.timestamp.log.inline']
+    expect(tokens[3]).toEqual value: '                  CBS', scopes: ['source.log', 'constant.log.cbs']
+    expect(tokens[5]).toEqual value: '2015-08-14 03:49:58.302', scopes: ['source.log', 'definition.comment.timestamp.log.inline']
 
     line = '2015-08-15 00:21:09, Info                  CSI    0000514d Created NT transaction (seq 2) result 0x00000000, handle @0x1118'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '2015-08-15 00:21:09', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: 'Info', scopes: ['source.log', 'definition.log.log-info']
-    expect(tokens[4]).toEqual value: 'CSI', scopes: ['source.log', 'entity.log.csi.dpx']
+    expect(tokens[3]).toEqual value: '                  CSI', scopes: ['source.log', 'entity.log.csi.other']
 
     line = '2015-08-15 00:12:17, Info                  CBS    Loaded Servicing Stack v10.0.10240.16384 with Core: C:\\WINDOWS\\winsxs\\amd64_microsoft-windows\\cbscore.dll PATH'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[6]).toEqual value: 'v10.0.10240.16384', scopes: ['source.log', 'keyword.log.version']
-    expect(tokens[8]).toEqual value: 'C:\\WINDOWS\\winsxs\\amd64_microsoft-windows\\cbscore.dll', scopes: ['source.log', 'keyword.log.path.win']
+    expect(tokens[5]).toEqual value: 'v10.0.10240.16384', scopes: ['source.log', 'keyword.log.version']
+    expect(tokens[7]).toEqual value: 'C:\\WINDOWS\\winsxs\\amd64_microsoft-windows\\cbscore.dll', scopes: ['source.log', 'keyword.log.path.win']
 
     line = '2015-08-13 11:50:04, Error                 CBS    Failed to process single phase execution. [HRESULT = 0x800f0816 - CBS_E_DPX_JOB_STATE_SAVED]'
     {tokens} = grammar.tokenizeLine(line)
@@ -221,4 +229,12 @@ describe 'Atom log grammar', ->
 
     line = '2015-08-13 11:50:15, Info                  DPX    Started DPX phase: Resume and Download Job'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[4]).toEqual value: 'DPX', scopes: ['source.log', 'entity.log.csi.dpx']
+    expect(tokens[3]).toEqual value: '                  DPX', scopes: ['source.log', 'entity.log.csi.other']
+
+    line = '2014-10-21 14:17:10, Info                  DISM   Service Pack Cleanup UI: PID=4704 WAU editions installed 2  -'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[3]).toEqual value: '                  DISM', scopes: ['source.log', 'entity.log.csi.other']
+
+    line = '2014-10-21 14:17:52, Info                  CBS    DC: tree root as a root relative path: \\Windows\\winsxs\\x86_microsoft-win_none_bb705a'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[5]).toEqual value: '\\Windows\\winsxs\\x86_microsoft-win_none_bb705a', scopes: ['source.log', 'keyword.log.path.win']
