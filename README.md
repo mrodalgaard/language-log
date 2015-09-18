@@ -1,4 +1,4 @@
-# Log syntax highlighting in Atom
+# Log syntax highlighting in Atom [![Build Status](https://travis-ci.org/mrodalgaard/language-log.svg)](https://travis-ci.org/mrodalgaard/language-log)
 
 Adds syntax colors for common log formats in [Atom](https://atom.io/) - improving visual grepping.
 
