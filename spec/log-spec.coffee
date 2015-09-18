@@ -58,6 +58,16 @@ describe 'Atom log grammar', ->
     expect(tokens[0]).toEqual value: 'Incident Identifier:', scopes: ['source.log', 'definition.log.log-verbose']
     expect(tokens[2]).toEqual value: 'A8111234-3CD8-4FF0-BD99-CFF7FDACB212', scopes: ['source.log', 'keyword.log.serial']
 
+    line = '[2015-09-17 16:37:57 CEST] <main> INFO: Configuration refresh successful.'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '[2015-09-17 16:37:57 CEST]', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'INFO', scopes: ['source.log', 'definition.log.log-info']
+
+    line = '[2015-09-17 16:37:59 CEST] <main> DBG-X:   parameter BaseVersion = 1.8.3'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '[2015-09-17 16:37:59 CEST]', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'DBG-X', scopes: ['source.log', 'definition.log.log-debug']
+
   it 'parses IDEA logs', ->
     line = '2014-12-11 14:00:36,047 [ 200232]   INFO - ls.idea.gradle.util.GradleUtil - Looking for embedded Maven repo at \'/Applications/Android Studio.app/Contents/gradle/m2repository\' '
     {tokens} = grammar.tokenizeLine(line)
