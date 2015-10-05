@@ -1,6 +1,8 @@
-# Log syntax highlighting in Atom [![Build Status](https://travis-ci.org/mrodalgaard/language-log.svg)](https://travis-ci.org/mrodalgaard/language-log)
+# Log syntax highlighting and filtering in Atom [![Build Status](https://travis-ci.org/mrodalgaard/language-log.svg)](https://travis-ci.org/mrodalgaard/language-log)
 
 Adds syntax colors for common log formats in [Atom](https://atom.io/) - improving visual grepping.
+
+Also adds a filtering bottom bar to separate out the statements you are not interested in (can be removed through package config).
 
 ![language-log](https://raw.githubusercontent.com/mrodalgaard/language-log/master/screenshots/preview.png)
 
@@ -20,6 +22,15 @@ An Atom grammar that helps you quickly extract the important parts of various lo
  * [x] Common system logs from e.g. ~/Library/Logs/
 
 There are a whole bunch of standard and non-standard log formats out there. This is an attempt to reach the most common I bump into on a weekly basis.
+
+## Tasks
+
+ * [x] Log filtering
+ * [ ] Hide filtered lines option
+ * [ ] Timestamp search and filtering
+ * [ ] Log tail
+ * [ ] Hide with little tab above status bar
+ * [ ] Show warning on logs above 10,000 lines
 
 ## Notes
 

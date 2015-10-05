@@ -1,0 +1,35 @@
+11-13 05:51:46.949: D/dalvikvm(1359): GC_FOR_ALLOC freed 104K, 6% free 3161K/3356K, paused 31ms, total 35ms
+11-13 05:51:47.259: D/gralloc_goldfish(1359): Emulator without GPU emulation detected.
+11-13 05:51:47.359: I/ActivityManager(384): Displayed Activity: +7s665ms
+11-13 05:51:49.789: D/LoginActivity(1359): Logging in...
+11-13 05:51:49.819: A/SoundPool(384): error loading /system/media/audio/ui/Effect_Tick.ogg
+11-13 05:51:49.819: W/AudioService(384): Soundpool could not load file: /system/media/audio/ui/Effect_Tick.ogg
+11-13 05:51:49.819: E/SoundPool(): error loading /system/media/audio/ui/Effect_Tick.ogg
+11-13 05:51:49.819: W/AudioService(384): Soundpool could not load file: /system/media/audio/ui/Effect_Tick.ogg
+11-13 05:51:49.929: D/dalvikvm(1359): GC_FOR_ALLOC freed 82K, 5% free 3314K/3484K, paused 20ms, total 22ms
+11-13 05:51:49.929: I/dalvikvm-heap(1359): Grow heap (frag case) to 3.922MB for 635812-byte allocation
+11-13 05:51:49.989: D/dalvikvm(1359): GC_FOR_ALLOC freed 3K, 5% free 3931K/4108K, paused 34ms, total 34ms
+11-13 05:51:50.059: V/PhoneStatusBar(437): setLightsOn(true)
+11-13 05:51:50.259: I/Choreographer(1359): Skipped 32 frames!  The application may be doing too much work on its main thread.
+11-13 05:51:50.439: I/Choreographer(437): Skipped 38 frames!  The application may be doing too much work on its main thread.
+11-13 05:51:50.879: I/Choreographer(1359): Skipped 114 frames!  The application may be doing too much work on its main thread.
+11-13 05:51:51.069: D/dalvikvm(1359): Load lib /data/lib/com.test.app/helper_jni.so 0xb2d997b8
+11-13 05:51:52.279: D/NDK_DEBUG(1359): RUN APPLICATION
+11-13 05:51:52.279: I/NDK_DEBUG(1359): Session started
+11-13 05:51:52.279: I/NDK_DEBUG(1359): Constructor called
+11-13 05:51:52.279: I/NDK_DEBUG(1359): Session ended
+11-13 05:51:52.329: E/dalvikvm(1359): JNI ERROR (app bug): non-zero capacity for NULL pointer: 4
+11-13 05:51:52.329: I/dalvikvm(1359): "AsyncTask #1" prio=5 tid=11 RUNNABLE
+11-13 05:51:52.329: I/dalvikvm(1359):   | group="main" sCount=0 dsCount=0 obj=0xb2d9f3e8 self=0xb7616400
+11-13 05:51:52.329: I/dalvikvm(1359):   | sysTid=1376 nice=10 sched=0/0 cgrp=apps/bg_non_interactive handle=-1218292864
+11-13 05:51:52.329: I/dalvikvm(1359):   | state=R schedstat=( 300000000 1940000000 54 ) utm=10 stm=20 core=0
+11-13 05:51:52.339: I/dalvikvm(1359):   at com.test.app.Wrapper.open(Native Method)
+11-13 05:51:52.339: I/dalvikvm(1359):   at android.os.AsyncTask$2.call(AsyncTask.java:288)
+11-13 05:51:52.339: I/dalvikvm(1359):   at java.util.concurrent.FutureTask.run(FutureTask.java:237)
+11-13 05:51:52.339: I/dalvikvm(1359):   at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1112)
+11-13 05:51:52.339: I/dalvikvm(1359):   at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:587)
+11-13 05:51:52.339: I/dalvikvm(1359):   at java.lang.Thread.run(Thread.java:841)
+11-13 05:51:52.339: E/dalvikvm(1359): VM aborting
+11-13 05:51:52.339: A/libc(1359): Fatal signal 6 (SIGABRT) at 0x0000054f (code=-6), thread 1376 (AsyncTask #1)
+11-13 05:51:52.379: I/DEBUG(54): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+11-13 05:51:52.379: I/DEBUG(54): Build fingerprint: 'generic/sdk/generic:4.4.2/KK/938007:eng/test-keys'

@@ -1,7 +1,8 @@
 {
   "name": "language-log",
+  "main": "./lib/main",
   "version": "0.6.0",
-  "description": "Log file syntax highlighting in Atom",
+  "description": "Log syntax highlighting and filtering",
   "keywords": [
     "log",
     "syntax",
@@ -14,7 +15,9 @@
   "engines": {
     "atom": ">= 0.100.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "atom-space-pen-views": "^2.1.0"
+  },
   "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/MRodalgaard/language-log/issues"
