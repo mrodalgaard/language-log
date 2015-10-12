@@ -3,17 +3,6 @@
 
 module.exports =
 class LogView extends View
-  settings:
-    verbose: true
-    info: true
-    debug: true
-    warning: true
-    error: true
-
-  markers:
-    text: []
-    levels: []
-
   @content: (filterBuffer) ->
     filterEditor = new TextEditor
       mini: true
@@ -25,15 +14,17 @@ class LogView extends View
 
     @div tabIndex: -1, class: 'log-view', =>
       @header class: 'header', =>
-        @span outlet: 'descriptionLabel', 'Log Filter'
+        @span 'Log Filter'
+        @span class: 'pull-right', 'Level Filters'
+        @span outlet: 'logInfoText', class: 'log-info-text'
 
       @section class: 'input-block', =>
         @div class: 'input-block-item input-block-item--flex editor-container', =>
-          @subview 'filterEditor', new TextEditorView(editor: filterEditor)
+          @subview 'filterEditorView', new TextEditorView(editor: filterEditor)
 
         @div class: 'input-block-item', =>
-          @div class: 'btn-group', =>
-            @button outlet: 'filterButton', class: 'btn', 'Filter'
+          @div class: 'btn-group btn-group-filter', =>
+            @button outlet: 'filterButton', class: 'btn btn-filter', 'Filter'
           @div class: 'btn-group btn-toggle btn-group-level', =>
             @button outlet: 'levelVerboseButton', class: 'btn log-verbose', 'V'
             @button outlet: 'levelInfoButton', class: 'btn log-info', 'I'
@@ -48,8 +39,10 @@ class LogView extends View
   initialize: ->
     @disposables = new CompositeDisposable
 
+    @setupObjects()
     @handleEvents()
     @updateButtons()
+    @checkLogSize()
 
     @disposables.add atom.tooltips.add @filterButton, title: "Filter Log Lines"
     @disposables.add atom.tooltips.add @levelVerboseButton, title: "Toggle Verbose Level"
@@ -59,7 +52,7 @@ class LogView extends View
     @disposables.add atom.tooltips.add @levelErrorButton, title: "Toggle Error Level"
 
   handleEvents: ->
-    @disposables.add atom.commands.add @filterEditor.element,
+    @disposables.add atom.commands.add @filterEditorView.element,
       'core:confirm': => @confirm()
 
     @disposables.add atom.commands.add @element,
@@ -72,19 +65,31 @@ class LogView extends View
     @levelWarningButton.on 'click', => @toggleButton('warning')
     @levelErrorButton.on 'click', => @toggleButton('error')
 
-    @filterEditor.getModel().onDidStopChanging => @liveFilter()
+    @filterEditorView.getModel().onDidStopChanging => @liveFilter()
 
-    @on 'focus', => @filterEditor.focus()
+    @on 'focus', => @filterEditorView.focus()
 
   destroy: ->
     @disposables.dispose()
-    # @removeMarkers()
+    @removeMarkers()
     @detach()
+
+  setupObjects: ->
+    @settings =
+      verbose: true
+      info: true
+      debug: true
+      warning: true
+      error: true
+
+    @markers =
+      text: []
+      levels: []
 
   toggleButton: (level) ->
     @settings[level] = if @settings[level] then false else true
     @updateButtons()
-    @performLevelFilter()
+    @performLevelFilter(@getFilterScopes())
 
   updateButtons: ->
     @levelVerboseButton.toggleClass('selected', @settings.verbose)
@@ -94,31 +99,31 @@ class LogView extends View
     @levelErrorButton.toggleClass('selected', @settings.error)
 
   confirm: ->
-    @performTextFilter()
+    @performTextFilter(@getFilterRegex())
 
   liveFilter: ->
     @removeMarkers('text') if @filterBuffer.getText().length is 0
 
-  performTextFilter: ->
+  performTextFilter: (regex) ->
     return unless buffer = @textEditor.getBuffer()
 
     @removeMarkers('text')
-    return unless regex = @getFilterRegex()
+    return unless regex
 
     for line, i in buffer.getLines()
       unless regex.test(line)
         @markers.text.push(@filterLine(i))
 
-  performLevelFilter: ->
+  performLevelFilter: (scopes) ->
     return unless buffer = @textEditor.getBuffer()
 
     @removeMarkers('levels')
-    return unless filterScopes = @getFilterScopes()
+    return unless scopes
     grammar = @textEditor.getGrammar()
 
     for line, i in buffer.getLines()
       tokens = grammar.tokenizeLine(line)
-      if @shouldFilterScopes(tokens, filterScopes)
+      if @shouldFilterScopes(tokens, scopes)
         @markers.levels.push(@filterLine(i))
 
   filterLine: (lineNumber) ->
@@ -137,7 +142,11 @@ class LogView extends View
 
   getFilterRegex: ->
     text = @filterBuffer.getText()
-    return new RegExp(text, 'i')
+    try
+      new RegExp(text, 'i')
+    catch error
+      atom.notifications.addWarning('Log Language', detail: 'Invalid filter regex')
+      false
 
   getFilterScopes: ->
     scopes = []
@@ -156,9 +165,15 @@ class LogView extends View
   removeMarkers: (type) ->
     if !type or type is 'text'
       marker.destroy() for marker in @markers.text
+      @markers.text = []
     if !type or type is 'levels'
       marker.destroy() for marker in @markers.levels
+      @markers.levels = []
 
   focusTextEditor: ->
     workspaceElement = atom.views.getView(atom.workspace)
     workspaceElement.focus()
+
+  checkLogSize: ->
+    if @textEditor.getLineCount() > 10000
+      @logInfoText.text '(large file warning)'

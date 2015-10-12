@@ -5,10 +5,15 @@
 
   .header {
     padding: @component-padding/2;
+
+    .log-info-text {
+      margin-left: 5px;
+      color: @text-color-warning;
+    }
   }
 
   .input-block {
-    @item-width: 220px;
+    @item-width: 260px;
 
     display: flex;
     flex-wrap: wrap;
@@ -18,21 +23,39 @@
       display: flex;
       flex: 1 1 @item-width;
       padding: @component-padding / 2;
+
+      .btn-group {
+        display: flex;
+      }
     }
 
     .input-block-item--flex {
       flex: 100 1 @item-width;
     }
 
-    .btn-group-level {
-      margin-left: @component-padding;
+    .btn-group {
+      display: flex;
+      flex: 1;
       .btn {
-        font-weight: bold;
-        width: 32px;
+        flex: 1;
       }
-      .btn:hover, .btn:not(.selected) {
-        color: inherit;
+      & + .btn-group {
+        margin-left: @component-padding;
       }
+    }
+
+    .btn-group-level {
+      flex: 1 1 220px;
+
+      .btn {
+        flex: 1 1 20%;
+        padding: 0;
+        text-align: center;
+      }
+    }
+
+    .btn-group-filter {
+      flex: 1 1 120px;
     }
   }
 

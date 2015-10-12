@@ -18,15 +18,18 @@ module.exports = LanguageLog =
   deactivate: ->
     @disposables.dispose()
     @logView?.destroy()
+    @removeLogPanel()
 
   addLogPanel: (textEditor) ->
     return unless atom.config.get 'language-log.showFilterBar'
 
-    LogView ?= require './log-view'
-    logView = new LogView(textEditor)
-    @logPanel = atom.workspace.addBottomPanel(item: logView, className: 'log-panel')
+    # Create new log view if opened log differs from previous
+    unless @logView?.textEditor is textEditor
+      LogView ?= require './log-view'
+      @logView?.destroy()
+      @logView = new LogView(textEditor)
+
+    @logPanel = atom.workspace.addBottomPanel(item: @logView, className: 'log-panel')
 
   removeLogPanel: ->
-    return unless @logPanel
-    @logPanel.getItem()?.destroy()
-    @logPanel.destroy()
+    @logPanel?.destroy()
