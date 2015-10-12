@@ -1,7 +1,7 @@
 {
   "name": "language-log",
   "main": "./lib/main",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "Log syntax highlighting and filtering",
   "keywords": [
     "log",
