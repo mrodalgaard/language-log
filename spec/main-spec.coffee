@@ -69,3 +69,15 @@ describe "Log", ->
         expect(workspaceElement.querySelector('.log-view')).toExist()
         expect(logModule.logView.filterBuffer.getText()).toEqual '123'
         expect(logModule.logView.settings.verbose).toEqual false
+
+    it "toggles on grammar change", ->
+      waitsForPromise ->
+        atom.packages.activatePackage('language-text')
+        atom.workspace.open 'android.log'
+      runs ->
+        expect(workspaceElement.querySelector('.log-view')).toExist()
+        item = atom.workspace.getActivePaneItem()
+        item.setGrammar(atom.grammars.getGrammars()[2])
+        expect(workspaceElement.querySelector('.log-view')).not.toExist()
+        item.setGrammar(atom.grammars.getGrammars()[1])
+        expect(workspaceElement.querySelector('.log-view')).toExist()

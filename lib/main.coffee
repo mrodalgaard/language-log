@@ -28,6 +28,8 @@ module.exports = LanguageLog =
       LogView ?= require './log-view'
       @logView?.destroy()
       @logView = new LogView(textEditor)
+      textEditor.onDidChangeGrammar (grammar) =>
+        if grammar.name is 'Log' then @addLogPanel(textEditor) else @removeLogPanel()
 
     @logPanel = atom.workspace.addBottomPanel(item: @logView, className: 'log-panel')
 
