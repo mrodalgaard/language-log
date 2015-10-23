@@ -12,7 +12,7 @@ module.exports = LanguageLog =
     @disposables = new CompositeDisposable
     @disposables.add atom.workspace.observeActivePaneItem (item) =>
       @removeLogPanel()
-      if item?.getGrammar?().packageName is 'language-log'
+      if item?.getGrammar?()?.packageName is 'language-log'
         @addLogPanel(item)
 
   deactivate: ->

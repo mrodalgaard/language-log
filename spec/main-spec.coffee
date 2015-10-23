@@ -15,11 +15,13 @@ describe "Log", ->
 
   describe "open", ->
     it "shows filter bar when opening a log file", ->
+      expect(logModule.logView).not.toExist()
       expect(workspaceElement.querySelector('.log-view')).not.toExist()
 
       waitsForPromise ->
         atom.workspace.open 'android.log'
       runs ->
+        expect(logModule.logView).toExist()
         expect(workspaceElement.querySelector('.log-view')).toExist()
 
     it "does not show on non log files", ->
@@ -52,6 +54,7 @@ describe "Log", ->
     it "remembers filter input", ->
       waitsForPromise ->
         atom.workspace.open '../coffeelint.json'
+      waitsForPromise ->
         atom.workspace.open 'android.log'
       runs ->
         expect(workspaceElement.querySelector('.log-view')).toExist()
@@ -60,12 +63,10 @@ describe "Log", ->
         logModule.logView.filterBuffer.setText '123'
         logModule.logView.settings.verbose = false
 
-        item = atom.workspace.getPaneItems()[0]
-        atom.workspace.getActivePane().activateItem(item)
+        atom.workspace.getActivePane().activatePreviousItem()
         expect(workspaceElement.querySelector('.log-view')).not.toExist()
 
-        item = atom.workspace.getPaneItems()[1]
-        atom.workspace.getActivePane().activateItem(item)
+        atom.workspace.getActivePane().activateNextItem()
         expect(workspaceElement.querySelector('.log-view')).toExist()
         expect(logModule.logView.filterBuffer.getText()).toEqual '123'
         expect(logModule.logView.settings.verbose).toEqual false
@@ -81,3 +82,19 @@ describe "Log", ->
         expect(workspaceElement.querySelector('.log-view')).not.toExist()
         item.setGrammar(atom.grammars.getGrammars()[1])
         expect(workspaceElement.querySelector('.log-view')).toExist()
+
+    it "does not fail on image (no grammar) load", ->
+      waitsForPromise ->
+        atom.packages.activatePackage('image-view')
+      waitsForPromise ->
+        atom.workspace.open '../../screenshots/preview.png'
+      waitsForPromise ->
+        atom.workspace.open 'android.log'
+      runs ->
+        expect(workspaceElement.querySelector('.log-view')).toExist()
+        atom.workspace.getActivePane().activatePreviousItem()
+        expect(workspaceElement.querySelector('.log-view')).not.toExist()
+        atom.workspace.getActivePane().activateNextItem()
+        expect(workspaceElement.querySelector('.log-view')).toExist()
+        atom.workspace.getActivePane().activatePreviousItem()
+        expect(workspaceElement.querySelector('.log-view')).not.toExist()
