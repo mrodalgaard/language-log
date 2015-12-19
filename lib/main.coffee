@@ -7,18 +7,29 @@ module.exports = LanguageLog =
     showFilterBar:
       type: 'boolean'
       default: true
+    tail:
+      type: 'boolean'
+      default: false
 
   activate: (state) ->
     @disposables = new CompositeDisposable
+    @grammarDisposable = new CompositeDisposable
+
     @disposables.add atom.workspace.observeActivePaneItem (item) =>
-      @removeLogPanel()
-      if item?.getGrammar?()?.packageName is 'language-log'
-        @addLogPanel(item)
+      @itemUpdate(item)
 
   deactivate: ->
     @disposables.dispose()
     @logView?.destroy()
     @removeLogPanel()
+
+  itemUpdate: (item) ->
+    @grammarDisposable.dispose()
+    return @removeLogPanel() unless item?.observeGrammar
+
+    @grammarDisposable.add item.observeGrammar? (grammar) =>
+      @removeLogPanel()
+      @addLogPanel(item) if grammar.name is 'Log'
 
   addLogPanel: (textEditor) ->
     return unless atom.config.get 'language-log.showFilterBar'
@@ -28,8 +39,6 @@ module.exports = LanguageLog =
       LogView ?= require './log-view'
       @logView?.destroy()
       @logView = new LogView(textEditor)
-      textEditor.onDidChangeGrammar (grammar) =>
-        if grammar.name is 'Log' then @addLogPanel(textEditor) else @removeLogPanel()
 
     @logPanel = atom.workspace.addBottomPanel(item: @logView, className: 'log-panel')
 
