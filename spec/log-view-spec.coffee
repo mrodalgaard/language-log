@@ -1,19 +1,16 @@
 path = require 'path'
-{TextEditor, TextBuffer} = require 'atom'
+{TextBuffer} = require 'atom'
 
 LogView = require '../lib/log-view'
 
 describe "LogView", ->
-  {logView, testText} = []
-
-  logViewWithText = (text) ->
-    buffer = new TextBuffer(text)
-    editor = new TextEditor({buffer})
-    new LogView(editor)
+  {logView, text} = []
 
   beforeEach ->
-    testText = '12:34 INFO: 1\n12:34 INFO: 2\n12:34 DEBUG: 3'
-    logView = logViewWithText(testText)
+    text = "12:34 INFO: 1\n12:34 INFO: 2\n12:34 DEBUG: 3"
+    buffer = new TextBuffer(text)
+    editor = atom.workspace.buildTextEditor({buffer})
+    logView = new LogView(editor)
     atom.project.setPaths [path.join(__dirname, 'fixtures')]
 
   describe "view", ->
@@ -24,13 +21,13 @@ describe "LogView", ->
 
   describe "filter log text", ->
     it "filters simple text", ->
-      expect(logView.textEditor.getText()).toEqual testText
-      expect(logView.textEditor.getMarkers()).toHaveLength 1
+      expect(logView.textEditor.getText()).toEqual text
+      expect(logView.textEditor.getMarkers()).toHaveLength 0
       expect(logView.markers.text).toHaveLength 0
 
       logView.performTextFilter /INFO/
 
-      expect(logView.textEditor.getMarkers()).toHaveLength 2
+      expect(logView.textEditor.getMarkers()).toHaveLength 1
       expect(logView.markers.text).toHaveLength 1
 
     it "can filter out no lines", ->
@@ -70,7 +67,7 @@ describe "LogView", ->
 
     it "filters out specific levels", ->
       logView.levelVerboseButton.click()
-      expect(logView.textEditor.getMarkers()).toHaveLength 1
+      expect(logView.textEditor.getMarkers()).toHaveLength 0
       expect(logView.markers.levels).toHaveLength 0
 
       logView.levelInfoButton.click()
@@ -91,3 +88,34 @@ describe "LogView", ->
       logView.levelErrorButton.click()
       logView.levelWarningButton.click()
       expect(logView.getFilterScopes()).toHaveLength 5
+
+  describe "log tailing", ->
+    it "does not tail by default", ->
+      pos = logView.textEditor.getCursorBufferPosition()
+      logView.textEditor.buffer.append('\nNew log line')
+      expect(logView.tailing).toBe false
+
+      advanceClock(logView.textEditor.buffer.stoppedChangingDelay)
+
+      expect(logView.tailing).toBe false
+      newPos = logView.textEditor.getCursorBufferPosition()
+      expect(newPos).toEqual pos
+
+    it "can tail on log changes", ->
+      atom.config.set('language-log.tail', true)
+      pos = logView.textEditor.getCursorBufferPosition()
+      expect(logView.tailing).toBe false
+
+      logView.textEditor.buffer.append('\nNew log line')
+      advanceClock(logView.textEditor.buffer.stoppedChangingDelay)
+
+      expect(logView.tailing).toBe true
+      newPos = logView.textEditor.getCursorBufferPosition()
+      expect(newPos).not.toEqual pos
+
+      logView.textEditor.buffer.append('\nNew log line')
+      advanceClock(logView.textEditor.buffer.stoppedChangingDelay)
+
+      expect(logView.tailing).toBe true
+      expect(logView.textEditor.getCursorBufferPosition()).not.toEqual pos
+      expect(logView.textEditor.getCursorBufferPosition()).not.toEqual newPos

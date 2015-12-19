@@ -71,17 +71,32 @@ describe "Log", ->
         expect(logModule.logView.filterBuffer.getText()).toEqual '123'
         expect(logModule.logView.settings.verbose).toEqual false
 
-    it "toggles on grammar change", ->
+    it "toggles on grammar change from log", ->
       waitsForPromise ->
         atom.packages.activatePackage('language-text')
         atom.workspace.open 'android.log'
       runs ->
         expect(workspaceElement.querySelector('.log-view')).toExist()
         item = atom.workspace.getActivePaneItem()
+        expect(item.getGrammar().name).toBe 'Log'
         item.setGrammar(atom.grammars.getGrammars()[2])
         expect(workspaceElement.querySelector('.log-view')).not.toExist()
+        expect(item.getGrammar().name).not.toBe 'Log'
         item.setGrammar(atom.grammars.getGrammars()[1])
         expect(workspaceElement.querySelector('.log-view')).toExist()
+        expect(item.getGrammar().name).toBe 'Log'
+
+    it "toggles on grammar change to log", ->
+      waitsForPromise ->
+        atom.packages.activatePackage('language-text')
+        atom.workspace.open '../log-spec.coffee'
+      runs ->
+        expect(workspaceElement.querySelector('.log-view')).not.toExist()
+        item = atom.workspace.getActivePaneItem()
+        expect(item.getGrammar().name).not.toBe 'Log'
+        item.setGrammar(atom.grammars.getGrammars()[1])
+        expect(workspaceElement.querySelector('.log-view')).toExist()
+        expect(item.getGrammar().name).toBe 'Log'
 
     it "does not fail on image (no grammar) load", ->
       waitsForPromise ->

@@ -12,8 +12,32 @@
     }
   }
 
+  .btn-icon {
+    line-height: 0;
+    overflow: hidden;
+
+    &::before {
+      line-height: 0.5;
+      font-size: 32px;
+      width: 32px;
+    }
+  }
+
+  .icon-scroll {
+    background: @text-color-success !important;
+    &::before {
+      animation: scroll-down 1s linear infinite;
+      @keyframes scroll-down {
+        0% { transform: translateY(0%); }
+        49% { transform: translateY(150%); }
+        50% { transform: translateY(-150%); }
+        100% { transform: translateY(0%); }
+      }
+    }
+  }
+
   .input-block {
-    @item-width: 260px;
+    @item-width: 300px;
 
     display: flex;
     flex-wrap: wrap;
@@ -44,18 +68,18 @@
       }
     }
 
+    .btn-group {
+      flex: 1 1 @item-width;
+    }
+
     .btn-group-level {
-      flex: 1 1 220px;
+      flex: 1 1 @item-width * 2;
 
       .btn {
         flex: 1 1 20%;
         padding: 0;
         text-align: center;
       }
-    }
-
-    .btn-group-filter {
-      flex: 1 1 120px;
     }
   }
 
