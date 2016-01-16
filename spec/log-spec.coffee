@@ -306,3 +306,12 @@ describe 'Atom log grammar', ->
     line = '2011-09-26 09:43:58, Info                  DPX    CreateFileW failed, FileName:\\\\?\\C:\\Windows\\temp\\$dpx$.tmp\\job.xml, Error:0x80070002'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[5]).toEqual value: 'C:\\Windows\\temp\\$dpx$.tmp\\job.xml', scopes: ['source.log', 'keyword.log.path.win']
+
+  it 'parses jboss logs', ->
+    expect(getGrammar('18:35:44,633 WARN org.springframework.beans')).toBe 'Log'
+
+    line = "18:35:44,633 WARN org.springframework.beans.factory.support.DisposableBeanAdapter Invocation of destroy method 'close' failed on bean with name 'sqlSession': java.lang.UnsupportedOperationException: Manual close is"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '18:35:44,633', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'WARN', scopes: ['source.log', 'definition.log.log-warning']
+    expect(tokens[4]).toEqual value: "'close'", scopes: ['source.log', 'log.string.single']
