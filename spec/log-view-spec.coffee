@@ -252,3 +252,10 @@ describe "LogView", ->
       logView.performTimestampFilter()
       expect(logView.markers.times).toHaveLength 1
       expect(+logView.markers.times[0]).toBe +time
+
+    it "parses mail server timestamps", ->
+      logView.textEditor.setText("2008-11-08 06:35:41.724563500 26375 logging:")
+      time = moment("2008/11/08 06:35:41.724")
+      logView.performTimestampFilter()
+      expect(logView.markers.times).toHaveLength 1
+      expect(+logView.markers.times[0]).toBe +time

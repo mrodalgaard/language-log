@@ -16,6 +16,7 @@ describe 'Atom log grammar', ->
     expect(getGrammar('#!/bin/sh')).not.toBe 'Log'
     expect(getGrammar('')).not.toBe 'Log'
     expect(getGrammar('1 2 3')).not.toBe 'Log'
+    expect(getGrammar('abc 2011-09-26 09:43:58')).not.toBe 'Log'
     expect(getGrammar('\n===')).not.toBe 'Log'
     expect(getGrammar('Print Guide\n1 2 3')).not.toBe 'Log'
 
@@ -122,7 +123,7 @@ describe 'Atom log grammar', ->
 
     line = '64.242.88.10 - - [07/Mar/2004:16:24:16 -0800] "GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1" 200 4924'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[0]).toEqual value: '64.242.88.10 - -', scopes: ['source.log']
+    expect(tokens[0]).toEqual value: '64.242.88.10', scopes: ['source.log', 'keyword.log.ip']
     expect(tokens[2]).toEqual value: '[07/Mar/2004:16:24:16 -0800]', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[4]).toEqual value: '"GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1"', scopes: ['source.log', 'log.string.double']
     expect(tokens[6]).toEqual value: '200', scopes: ['source.log', 'definition.log.log-success']
@@ -133,14 +134,14 @@ describe 'Atom log grammar', ->
 
     line = '::1 - - [20/Apr/2015:18:09:10 +0200] "GET / HTTP/1.1" 304 -'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[0]).toEqual value: '::1 - -', scopes: ['source.log']
-    expect(tokens[2]).toEqual value: '[20/Apr/2015:18:09:10 +0200]', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[0]).toEqual value: '::1 - - ', scopes: ['source.log']
+    expect(tokens[1]).toEqual value: '[20/Apr/2015:18:09:10 +0200]', scopes: ['source.log', 'definition.comment.timestamp.log']
 
     line = 'localhost - - [21/Apr/2015:09:20:21 +0200] "GET /favicon.ico HTTP/1.1" 404 209'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[0]).toEqual value: 'localhost - -', scopes: ['source.log']
-    expect(tokens[2]).toEqual value: '[21/Apr/2015:09:20:21 +0200]', scopes: ['source.log', 'definition.comment.timestamp.log']
-    expect(tokens[6]).toEqual value: '404', scopes: ['source.log', 'definition.log.log-failed']
+    expect(tokens[0]).toEqual value: 'localhost - - ', scopes: ['source.log']
+    expect(tokens[1]).toEqual value: '[21/Apr/2015:09:20:21 +0200]', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[5]).toEqual value: '404', scopes: ['source.log', 'definition.log.log-failed']
 
     line = '[Sun Mar  7 16:02:00 2004] [notice] Accept mutex: sysvsem (Default: sysvsem)'
     {tokens} = grammar.tokenizeLine(line)
@@ -151,7 +152,8 @@ describe 'Atom log grammar', ->
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '[Thu Mar 11 07:39:29 2004]', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: '[error]', scopes: ['source.log', 'definition.log.log-error']
-    expect(tokens[5]).toEqual value: '/usr/local/apache/htdocs/M83A', scopes: ['source.log', 'keyword.log.path']
+    expect(tokens[4]).toEqual value: '140.113.179.131', scopes: ['source.log', 'keyword.log.ip']
+    expect(tokens[7]).toEqual value: '/usr/local/apache/htdocs/M83A', scopes: ['source.log', 'keyword.log.path']
 
   it 'parses Nabto logs', ->
     expect(getGrammar('141121-14:00:26.095 {00007fff7463f300} [___')).toBe 'Log'
@@ -189,7 +191,8 @@ describe 'Atom log grammar', ->
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '04/25/15 14:51:35:002', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: '[WARN]', scopes: ['source.log', 'definition.log.log-warning']
-    expect(tokens[4]).toEqual value: '9E9EB9FD-FDE8-487A-A41C-7713DA91AC89', scopes: ['source.log', 'keyword.log.serial']
+    expect(tokens[4]).toEqual value: '5.0.0.0', scopes: ['source.log', 'keyword.log.ip']
+    expect(tokens[6]).toEqual value: '9E9EB9FD-FDE8-487A-A41C-7713DA91AC89', scopes: ['source.log', 'keyword.log.serial']
 
   it 'parses FaceTime logs', ->
     line = '2015-04-16 14:44:00 +0200 [FaceTimeServiceSession(imagent:281:YES):Default] Priming FaceTime Server bag'
@@ -315,3 +318,19 @@ describe 'Atom log grammar', ->
     expect(tokens[0]).toEqual value: '18:35:44,633', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: 'WARN', scopes: ['source.log', 'definition.log.log-warning']
     expect(tokens[4]).toEqual value: "'close'", scopes: ['source.log', 'log.string.single']
+
+  it 'parses mail logs', ->
+    expect(getGrammar('2008-11-08 06:32:46.354761500 26318 loggin:')).toBe 'Log'
+
+    line = "2008-11-08 06:35:41.724563500 26375 logging::logterse plugin: ` 58.126.113.198	Unknown	[58.126.113.198]	<benny@surecom.com>		rhsbl	901	Not supporting null originator (DSN)	msg denied before queued"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '2008-11-08 06:35:41.724563500', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: '58.126.113.198', scopes: ['source.log', 'keyword.log.ip']
+    expect(tokens[4]).toEqual value: "58.126.113.198", scopes: ['source.log', 'keyword.log.ip']
+    expect(tokens[6]).toEqual value: "<benny@surecom.com>", scopes: ['source.log', 'log.string.mail']
+
+    line = "2008-11-08 06:37:31.730609500 26398 logging::logterse plugin: ` 87.103.146.91:5555	pmsn.91.146.103.87.sable.dsl.krasnet.ru	pmsn.91.146.103.87.sable.dsl.krasnet.ru	dnsbl	903	http://www.spamhaus.org/query/bl?ip=87.103.146.91"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '2008-11-08 06:37:31.730609500', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: '87.103.146.91:5555', scopes: ['source.log', 'keyword.log.ip']
+    expect(tokens[8]).toEqual value: "http://www.spamhaus.org/query/bl?ip=87.103.146.91", scopes: ['source.log', 'keyword.log.url']
