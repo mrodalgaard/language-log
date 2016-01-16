@@ -57,6 +57,11 @@ describe 'Atom log grammar', ->
     expect(tokens[2]).toEqual value: 'E/SoundPool():', scopes: ['source.log', 'definition.log.log-error']
     expect(tokens[5]).toEqual value: '/system/media/audio/ui/Effect_Tick.ogg', scopes: ['source.log', 'keyword.log.path']
 
+    line = '11-13 05:51:49.929: D/dalvikvm(1359): GC_FOR_ALLOC freed 82K, 5% free 3314K/3484K'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '11-13 05:51:49.929:', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'D/dalvikvm(1359): GC_FOR_ALLOC freed 82K, 5% free 3314K/3484K', scopes: ['source.log', 'definition.log.log-verbose.gc-alloc']
+
     line = '11-13 05:51:52.329: I/dalvikvm(1359): "AsyncTask #1" prio=5 tid=11 RUNNABLE'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '11-13 05:51:52.329:', scopes: ['source.log', 'definition.comment.timestamp.log']

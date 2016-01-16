@@ -110,10 +110,6 @@
   'android':
     'patterns': [
       {
-        'match': '.* GC_FOR_ALLOC .*'
-        'name': 'variable.parameter.gc-alloc.log'
-      }
-      {
         'match': '[A|E]\/.*?[﹕|:]'
         'name': 'definition.log.log-error'
       }
@@ -131,6 +127,10 @@
       }
       {
         'match': 'V\/.*?[﹕|:]'
+        'name': 'definition.log.log-verbose'
+      }
+      {
+        'match': '.* GC_FOR_ALLOC .*'
         'name': 'definition.log.log-verbose'
       }
     ]

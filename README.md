@@ -32,6 +32,8 @@ There are a whole bunch of standard and non-standard log formats out there. This
  * [ ] Timestamp search and filtering
  * [ ] Dynamically updating
  * [ ] Vertically fold timestamp
+ * [ ] Graph / visualization of entry types
+ * [ ] Quick jump to errors
 
 ## Notes
 
