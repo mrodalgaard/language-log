@@ -1,6 +1,10 @@
 {View, TextEditorView} = require 'atom-space-pen-views'
 {CompositeDisposable, TextBuffer, Point} = require 'atom'
 
+moment = require 'moment'
+moment.createFromInputFallback = (config) ->
+  config._d = new Date(config._i)
+
 module.exports =
 class LogView extends View
   @content: (filterBuffer) ->
@@ -100,6 +104,7 @@ class LogView extends View
     @markers =
       text: []
       levels: []
+      times: []
 
   toggleTail: ->
     atom.config.set('language-log.tail', !atom.config.get('language-log.tail'))
@@ -147,6 +152,15 @@ class LogView extends View
       if @shouldFilterScopes(tokens, scopes)
         @markers.levels.push(@filterLine(i))
 
+  # XXX: Experimental log line timestamp extraction
+  #      Not used in production
+  performTimestampFilter: ->
+    return unless buffer = @textEditor.getBuffer()
+
+    for line, i in buffer.getLines()
+      if timestamp = @getLineTimestamp(i)
+        @markers.times[i] = timestamp
+
   filterLine: (lineNumber) ->
     # TODO: Hide/fold line completely instead of greying out
     # TODO: Update minimap
@@ -190,6 +204,42 @@ class LogView extends View
     if !type or type is 'levels'
       marker.destroy() for marker in @markers.levels
       @markers.levels = []
+
+  getLineTimestamp: (lineNumber) ->
+    for pos in [0..30] by 10
+      point = new Point(lineNumber, pos)
+      range = @textEditor.displayBuffer.bufferRangeForScopeAtPosition('timestamp', point)
+      if range and timestamp = @textEditor.getTextInRange(range)
+        return @parseTimestamp(timestamp)
+
+  parseTimestamp: (timestamp) ->
+    regexes = [
+      /^\d{6}[-\s]/
+      /[0-9]{4}:[0-9]{2}/
+      /[0-9]T[0-9]/
+    ]
+
+    # Remove invalid timestamp characters
+    timestamp = timestamp.replace(/[\[\]]?/g, '')
+    timestamp = timestamp.replace(/\,/g, '.')
+    timestamp = timestamp.replace(/([A-Za-z]*|[-+][0-9]{4}|[-+][0-9]{2}:[0-9]{2})$/, '')
+
+    # Rearrange string to valid timestamp format
+    if part = timestamp.match(regexes[0])?[0]
+      part = "20#{part.substr(0,2)}-#{part.substr(2,2)}-#{part.substr(4,2)} "
+      timestamp = timestamp.replace(regexes[0], part)
+    if timestamp.match(regexes[1])
+      timestamp = timestamp.replace(':', ' ')
+    if index = timestamp.indexOf(regexes[2]) isnt -1
+      timestamp[index+1] = ' '
+
+    # Very small matches are often false positive numbers
+    return false if timestamp.length < 8
+
+    time = moment(timestamp)
+    # Timestamps without year defaults to 2001 - set to current year
+    time.year(moment().year()) if time.year() is 2001
+    time
 
   focusTextEditor: ->
     workspaceElement = atom.views.getView(atom.workspace)

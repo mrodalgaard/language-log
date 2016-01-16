@@ -16,7 +16,8 @@
     "atom": ">= 0.100.0"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.1.0"
+    "atom-space-pen-views": "^2.1.0",
+    "moment": "^2.10.6"
   },
   "readmeFilename": "README.md",
   "bugs": {

@@ -24,7 +24,7 @@ describe 'Atom log grammar', ->
     expect(grammar.scopeName).toBe 'source.log'
 
   it 'parses general grammars', ->
-    expect(getGrammar('12-34 INFO')).toBe 'Log'
+    expect(getGrammar('12-13 INFO')).toBe 'Log'
 
     line = '(wcp.dll version 0.0.0.6)'
     {tokens} = grammar.tokenizeLine(line)
@@ -34,15 +34,15 @@ describe 'Atom log grammar', ->
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[1]).toEqual value: 'v2.25001', scopes: ['source.log', 'keyword.log.version']
 
-    line = '12-34 This directory z:\\windows\\random\\'
+    line = '12-13 This directory z:\\windows\\random\\'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[2]).toEqual value: 'z:\\windows\\random\\', scopes: ['source.log', 'keyword.log.path.win']
 
-    line = '12-34 WARNING: this is a warning'
+    line = '12-13 WARNING: this is a warning'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[2]).toEqual value: 'WARNING', scopes: ['source.log', 'definition.log.log-warning']
 
-    line = '12-34 Some random <Verbose> text'
+    line = '12-13 Some random <Verbose> text'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[2]).toEqual value: '<Verbose>', scopes: ['source.log', 'definition.log.log-verbose']
 
@@ -105,24 +105,42 @@ describe 'Atom log grammar', ->
     expect(tokens[3]).toEqual value: 'your-protocol://open?file=file&line=line', scopes: ['source.log', 'keyword.log.url']
 
   it 'parses Apache logs', ->
+    expect(getGrammar('64.242.88.10 - - [07/Mar/2004:16:45:56 -0800]')).toBe 'Log'
+    expect(getGrammar('[07/Mar/2004:16:24:16] "GET /twiki/bin/view/M')).toBe 'Log'
+
+    line = '07/Mar/2004:16:24:16 "GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1" 200 4924'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '07/Mar/2004:16:24:16', scopes: ['source.log', 'definition.comment.timestamp.log']
+
+    line = '[07/03/2004:16:24:16] "GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1" 200 4924'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '[07/03/2004:16:24:16]', scopes: ['source.log', 'definition.comment.timestamp.log']
+
+    line = '[07/Mar/2004:16:24:16] "GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1" 200 4924'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '[07/Mar/2004:16:24:16]', scopes: ['source.log', 'definition.comment.timestamp.log']
+
     line = '64.242.88.10 - - [07/Mar/2004:16:24:16 -0800] "GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1" 200 4924'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[0]).toEqual value: '64.242.88.10 - -', scopes: ['source.log', 'definition.comment.timestamp.log']
-    expect(tokens[2]).toEqual value: '"GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1"', scopes: ['source.log', 'log.string.double']
-    expect(tokens[4]).toEqual value: '200', scopes: ['source.log', 'definition.log.log-success']
+    expect(tokens[0]).toEqual value: '64.242.88.10 - -', scopes: ['source.log']
+    expect(tokens[2]).toEqual value: '[07/Mar/2004:16:24:16 -0800]', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[4]).toEqual value: '"GET /twiki/bin/view/Main/PeterThoeny HTTP/1.1"', scopes: ['source.log', 'log.string.double']
+    expect(tokens[6]).toEqual value: '200', scopes: ['source.log', 'definition.log.log-success']
 
     line = '64.242.88.10 - - [07/Mar/2004:16:45:56 -0800] "GET /twiki/bin/attach/Main/PostfixCommands HTTP/1.1" 401 12846'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[4]).toEqual value: '401', scopes: ['source.log', 'definition.log.log-failed']
+    expect(tokens[6]).toEqual value: '401', scopes: ['source.log', 'definition.log.log-failed']
 
     line = '::1 - - [20/Apr/2015:18:09:10 +0200] "GET / HTTP/1.1" 304 -'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[0]).toEqual value: '::1 - -', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[0]).toEqual value: '::1 - -', scopes: ['source.log']
+    expect(tokens[2]).toEqual value: '[20/Apr/2015:18:09:10 +0200]', scopes: ['source.log', 'definition.comment.timestamp.log']
 
     line = 'localhost - - [21/Apr/2015:09:20:21 +0200] "GET /favicon.ico HTTP/1.1" 404 209'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[0]).toEqual value: 'localhost - -', scopes: ['source.log', 'definition.comment.timestamp.log']
-    expect(tokens[4]).toEqual value: '404', scopes: ['source.log', 'definition.log.log-failed']
+    expect(tokens[0]).toEqual value: 'localhost - -', scopes: ['source.log']
+    expect(tokens[2]).toEqual value: '[21/Apr/2015:09:20:21 +0200]', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[6]).toEqual value: '404', scopes: ['source.log', 'definition.log.log-failed']
 
     line = '[Sun Mar  7 16:02:00 2004] [notice] Accept mutex: sysvsem (Default: sysvsem)'
     {tokens} = grammar.tokenizeLine(line)
@@ -204,7 +222,7 @@ describe 'Atom log grammar', ->
 
     line = '2015-04-23T13:58:41.657+01:00| VMware Fusion| I120: VTHREAD initialize main thread 4 "VMware Fusion" pid 9824'
     {tokens} = grammar.tokenizeLine(line)
-    expect(tokens[0]).toEqual value: '2015-04-23T13:58:41.657+01:00|', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[0]).toEqual value: '2015-04-23T13:58:41.657+01:00', scopes: ['source.log', 'definition.comment.timestamp.log']
 
   it 'parses SourceForge logs', ->
     line = '[575435.110] Initializing built-in extension Generic Event Extension'
