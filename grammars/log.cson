@@ -34,6 +34,7 @@
   {'include': '#apple'}
   {'include': '#cbs'}
   {'include': '#jboss'}
+  {'include': '#npm'}
 ]
 
 'repository':
@@ -320,5 +321,43 @@
       {
         'match': '\\bTRACE\\b'
         'name': 'definition.log.log-verbose'
+      }
+    ]
+  'npm':
+    'patterns': [
+      {
+        'match': '^(\\d+) (error) '
+        'captures': {
+          1: { 'name': 'comment.block.log.index' }
+          2: { 'name': 'definition.log.log-error' }
+        }
+      }
+      {
+        'match': '^(\\d+) (warn) '
+        'captures': {
+          1: { 'name': 'comment.block.log.index' }
+          2: { 'name': 'definition.log.log-warning' }
+        }
+      }
+      {
+        'match': '^(\\d+) (debug) '
+        'captures': {
+          1: { 'name': 'comment.block.log.index' }
+          2: { 'name': 'definition.log.log-debug' }
+        }
+      }
+      {
+        'match': '^(\\d+) (info|http) '
+        'captures': {
+          1: { 'name': 'comment.block.log.index' }
+          2: { 'name': 'definition.log.log-info' }
+        }
+      }
+      {
+        'match': '^(\\d+) (verbose|silly) '
+        'captures': {
+          1: { 'name': 'comment.block.log.index' }
+          2: { 'name': 'definition.log.log-verbose' }
+        }
       }
     ]

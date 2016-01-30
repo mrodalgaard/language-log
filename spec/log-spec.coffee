@@ -324,6 +324,49 @@ describe 'Atom log grammar', ->
     expect(tokens[2]).toEqual value: 'WARN', scopes: ['source.log', 'definition.log.log-warning']
     expect(tokens[4]).toEqual value: "'close'", scopes: ['source.log', 'log.string.single']
 
+  it 'parses npm-debug.log', ->
+    expect(getGrammar('npm-debug.log', '0 info it worked if it ends with ok')).toBe 'Log'
+
+    line = "70 http request GET https://registry.npmjs.org/bindings"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '70', scopes: ['source.log', 'comment.block.log.index']
+    expect(tokens[2]).toEqual value: 'http', scopes: ['source.log', 'definition.log.log-info']
+
+    line = "71 verbose request uri https://registry.npmjs.org/nan"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '71', scopes: ['source.log', 'comment.block.log.index']
+    expect(tokens[2]).toEqual value: 'verbose', scopes: ['source.log', 'definition.log.log-verbose']
+
+    line = "75 http request GET https://registry.npmjs.org/nan"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '75', scopes: ['source.log', 'comment.block.log.index']
+    expect(tokens[2]).toEqual value: 'http', scopes: ['source.log', 'definition.log.log-info']
+
+    line = "76 http 304 https://registry.npmjs.org/nan"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '76', scopes: ['source.log', 'comment.block.log.index']
+    expect(tokens[2]).toEqual value: 'http', scopes: ['source.log', 'definition.log.log-info']
+
+    line = "85 silly addNamed nan@>=2.2.0 <3.0.0"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '85', scopes: ['source.log', 'comment.block.log.index']
+    expect(tokens[2]).toEqual value: 'silly', scopes: ['source.log', 'definition.log.log-verbose']
+
+    line = "344 info lifecycle nan@2.2.0~install: nan@2.2.0"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '344', scopes: ['source.log', 'comment.block.log.index']
+    expect(tokens[2]).toEqual value: 'info', scopes: ['source.log', 'definition.log.log-info']
+
+    line = "361 warn EPACKAGEJSON tmp No description"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '361', scopes: ['source.log', 'comment.block.log.index']
+    expect(tokens[2]).toEqual value: 'warn', scopes: ['source.log', 'definition.log.log-warning']
+
+    line = "373 error Exit status 1"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '373', scopes: ['source.log', 'comment.block.log.index']
+    expect(tokens[2]).toEqual value: 'error', scopes: ['source.log', 'definition.log.log-error']
+
   it 'parses mail logs', ->
     expect(getGrammar('2008-11-08 06:32:46.354761500 26318 loggin:')).toBe 'Log'
 
