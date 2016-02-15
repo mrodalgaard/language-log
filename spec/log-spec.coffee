@@ -74,6 +74,32 @@ describe 'Atom log grammar', ->
     expect(tokens[2]).toEqual value: 'E/SoundPool:', scopes: ['source.log', 'definition.log.log-error']
     expect(tokens[5]).toEqual value: '/system/media/audio/ui/Effect_Tick.ogg', scopes: ['source.log', 'keyword.log.path']
 
+  it 'parses Android logs with option "threadtime"', ->
+    line = '02-12 17:25:47.614  2335 26149 D WebSocketClient: sending websocket request'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '02-12 17:25:47.614', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'D WebSocketClient:', scopes: ['source.log', 'definition.log.log-debug']
+
+    line = '02-12 17:27:08.317  2335 26149 I WebSocketClient: Got error while connecting, will retry, ex: java.net.UnknownHostException: Unable to resolve host'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '02-12 17:27:08.317', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'I WebSocketClient:', scopes: ['source.log', 'definition.log.log-info']
+
+    line = '02-12 17:37:00.539 27023 27023 V EventContext: unregister, observers count: 3698'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '02-12 17:37:00.539', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'V EventContext:', scopes: ['source.log', 'definition.log.log-verbose']
+
+    line = '02-12 17:36:40.271   795   805 W InputMethodManagerService: Starting input on non-focused client'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '02-12 17:36:40.271', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'W InputMethodManagerService:', scopes: ['source.log', 'definition.log.log-warning']
+
+    line = '02-12 17:36:40.190  1723  1736 E ANDR-PERF-LOCK: Failed to apply optimization for resource: 4 level: 0'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '02-12 17:36:40.190', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'E ANDR-PERF-LOCK:', scopes: ['source.log', 'definition.log.log-error']
+
   it 'parses iOS logs', ->
     expect(getGrammar('[2015-09-17 16:37:57 CEST] <main> INFO')).toBe 'Log'
 

@@ -115,20 +115,50 @@
         'name': 'definition.log.log-error'
       }
       {
+        'match': ' +[0-9\-]+ +[0-9\-]+ ([A|E] .*?[﹕|:])'
+        'captures':
+          '1':
+            'name': 'definition.log.log-error'
+      }
+      {
         'match': 'W\/.*?[﹕|:]'
         'name': 'definition.log.log-warning'
+      }
+      {
+        'match': ' +[0-9\-]+ +[0-9\-]+ (W .*?[﹕|:])'
+        'captures':
+          '1':
+            'name': 'definition.log.log-warning'
       }
       {
         'match': 'D\/.*?[﹕|:]'
         'name': 'definition.log.log-debug'
       }
       {
+        'match': ' +[0-9\-]+ +[0-9\-]+ (D .*?[﹕|:])'
+        'captures':
+          '1':
+            'name': 'definition.log.log-debug'
+      }
+      {
         'match': 'I\/.*?[﹕|:]'
         'name': 'definition.log.log-info'
       }
       {
+        'match': ' +[0-9\-]+ +[0-9\-]+ (I .*?[﹕|:])'
+        'captures':
+          '1':
+            'name': 'definition.log.log-info'
+      }
+      {
         'match': 'V\/.*?[﹕|:]'
         'name': 'definition.log.log-verbose'
+      }
+      {
+        'match': ' +[0-9\-]+ +[0-9\-]+ (V .*?[﹕|:])'
+        'captures':
+          '1':
+            'name': 'definition.log.log-verbose'
       }
       {
         'match': '.* GC_FOR_ALLOC .*'
