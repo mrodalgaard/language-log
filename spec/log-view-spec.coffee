@@ -27,6 +27,7 @@ describe "LogView", ->
       expect(logView.settings).toBeDefined()
       expect(logView.find('.input-block')).toBeDefined()
       expect(logView.find('.btn-group-level')).toBeDefined()
+      expect(logView.find('.descriptionLabel')).toBeDefined()
 
   describe "filter log text", ->
     it "filters simple text", ->
@@ -145,6 +146,29 @@ describe "LogView", ->
 
       logView.levelDebugButton.click()
       expect(logFilter.getFilteredLines()).toEqual []
+
+  describe "show description label", ->
+    beforeEach ->
+      waitsForPromise ->
+        atom.packages.activatePackage('language-log')
+      runs ->
+        grammar = atom.grammars.grammarForScopeName('source.log')
+        logView.textEditor.setGrammar(grammar)
+
+    it "shows total lines and filtered lines", ->
+      expect(logView.find('.description')[0].innerHTML).toBe "Showing 3 log lines"
+      logView.levelDebugButton.click()
+      expect(logView.find('.description')[0].innerHTML).toBe "Showing 2 of 3 log lines"
+
+    it "updates on file changes", ->
+      logView.textEditor.deleteLine(0)
+      advanceClock(logView.textEditor.buffer.stoppedChangingDelay)
+      expect(logView.find('.description')[0].innerHTML).toBe "Showing 2 log lines"
+
+      logView.textEditor.deleteLine(0)
+      logView.levelDebugButton.click()
+      advanceClock(logView.textEditor.buffer.stoppedChangingDelay)
+      expect(logView.find('.description')[0].innerHTML).toBe "Showing 0 of 1 log lines"
 
   describe "log tailing", ->
     it "does not tail by default", ->

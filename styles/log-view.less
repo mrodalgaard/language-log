@@ -6,9 +6,14 @@
   .header {
     padding: @component-padding/2;
 
-    .log-info-text {
-      margin-left: 5px;
-      color: @text-color-warning;
+    .description {
+      display: inline-block;
+      color: @text-color-subtle;
+      padding-left: @component-padding;
+      &.warning {
+        color: @text-color-warning;
+        font-weight: normal;
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 {CompositeDisposable, Point} = require 'atom'
+{Emitter} = require 'atom'
 
 moment = require 'moment'
 moment.createFromInputFallback = (config) ->
@@ -8,11 +9,14 @@ module.exports =
 class LogFilter
   constructor: (@textEditor) ->
     @disposables = new CompositeDisposable
+    @emitter = new Emitter
 
     @results =
       text: []
       levels: []
       times: []
+
+  onDidFinishFilter: (cb) -> @emitter.on 'did-finish-filter', cb
 
   destroy: ->
     @disposables.dispose()
@@ -26,6 +30,9 @@ class LogFilter
     output = {}
     output[res[key]] = res[key] for key in [0...res.length]
     value for key, value of output
+
+  getFilteredCount: ->
+    @results.text.length + @results.levels.length
 
   performTextFilter: (text) ->
     return unless regex = @getRegexFromText(text)
@@ -66,6 +73,8 @@ class LogFilter
       if lines[i+1] isnt line + 1
         @foldLineRange(start or lines[0], line)
         start = lines[i+1]
+
+    @emitter.emit 'did-finish-filter'
 
   foldLineRange: (start, end) ->
     return unless start? and end?

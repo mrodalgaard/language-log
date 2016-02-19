@@ -19,7 +19,8 @@ class LogView extends View
       @header class: 'header', =>
         @span 'Log Filter'
         @span class: 'pull-right', 'Level Filters'
-        @span outlet: 'logInfoText', class: 'log-info-text'
+        @span outlet: 'descriptionLabel', class: 'description'
+        @span outlet: 'descriptionWarningLabel', class: 'description warning'
 
       @section class: 'input-block', =>
         @div class: 'input-block-item input-block-item--flex editor-container', =>
@@ -55,7 +56,7 @@ class LogView extends View
 
     @handleEvents()
     @updateButtons()
-    @checkLogSize()
+    @updateDescription()
 
     @disposables.add atom.tooltips.add @filterButton,
       title: "Filter Log Lines"
@@ -79,6 +80,9 @@ class LogView extends View
     @disposables.add atom.commands.add @element,
       'core:cancel': => @focusTextEditor()
 
+    @disposables.add @logFilter.onDidFinishFilter =>
+      @updateDescription()
+
     @filterButton.on 'click', => @confirm()
     @tailButton.on 'click', => @toggleTail()
     @levelVerboseButton.on 'click', => @toggleButton('verbose')
@@ -87,8 +91,12 @@ class LogView extends View
     @levelWarningButton.on 'click', => @toggleButton('warning')
     @levelErrorButton.on 'click', => @toggleButton('error')
 
-    @filterEditorView.getModel().onDidStopChanging => @liveFilter()
-    @textEditor.onDidStopChanging => @tail()
+    @filterEditorView.getModel().onDidStopChanging =>
+      @liveFilter()
+
+    @textEditor.onDidStopChanging =>
+      @tail()
+      @updateDescription()
 
     @on 'focus', => @filterEditorView.focus()
 
@@ -138,9 +146,21 @@ class LogView extends View
     workspaceElement = atom.views.getView(atom.workspace)
     workspaceElement.focus()
 
-  checkLogSize: ->
-    if @textEditor.getLineCount() > 10000
-      @logInfoText.text '(large file warning)'
+  updateDescription: ->
+    lines = @textEditor.getLineCount()
+    filteredLines = @logFilter.getFilteredCount()
+
+    @descriptionLabel.text(if filteredLines
+      "Showing #{lines - filteredLines} of #{lines} log lines"
+    else
+      "Showing #{lines} log lines"
+    )
+
+    @descriptionWarningLabel.text(if lines > 10000
+      "(large file warning)"
+    else
+      ""
+    )
 
   tail: ->
     return unless atom.config.get('language-log.tail')
