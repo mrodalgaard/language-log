@@ -75,6 +75,8 @@ describe 'Atom log grammar', ->
     expect(tokens[5]).toEqual value: '/system/media/audio/ui/Effect_Tick.ogg', scopes: ['source.log', 'keyword.log.path']
 
   it 'parses Android logs with option "threadtime"', ->
+    expect(getGrammar('02-12 17:25:47.614  2335 26149 D WebSocketC')).toBe 'Log'
+
     line = '02-12 17:25:47.614  2335 26149 D WebSocketClient: sending websocket request'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '02-12 17:25:47.614', scopes: ['source.log', 'definition.comment.timestamp.log']

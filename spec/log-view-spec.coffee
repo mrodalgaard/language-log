@@ -212,6 +212,12 @@ describe "LogView", ->
       expect(logFilter.results.times).toHaveLength 1
       expect(+logFilter.results.times[0]).toBe +time
 
+      logView.textEditor.setText('02-12 17:25:47.614  2335 26149 D WebSocketC')
+      time = moment("02/12 17:25:47.614").year(moment().year())
+      logFilter.performTimestampFilter()
+      expect(logFilter.results.times).toHaveLength 1
+      expect(+logFilter.results.times[0]).toBe +time
+
     it "parses iOS timestamps", ->
       logView.textEditor.setText("[2015-09-17 16:37:57 CEST] <main> INFO")
       time = moment("2015/09/17 16:37:57.000")
