@@ -36,7 +36,7 @@ describe "LogView", ->
       expect(getFoldedLines()).toHaveLength 0
       expect(logFilter.getFilteredLines()).toHaveLength 0
 
-      logFilter.performTextFilter "INFO"
+      logFilter.performTextFilter 'INFO'
 
       # TODO: Fails because it marks the line above folded as folded also!!!
       #expect(getFoldedLines()).toEqual [2]
@@ -44,11 +44,11 @@ describe "LogView", ->
 
     it "can filter out no lines", ->
       expect(logFilter.getFilteredLines()).toHaveLength 0
-      logFilter.performTextFilter "12:34"
+      logFilter.performTextFilter '12:34'
       expect(logFilter.getFilteredLines()).toHaveLength 0
 
     it "can filter out all lines", ->
-      logFilter.performTextFilter "XXX"
+      logFilter.performTextFilter 'XXX'
       expect(logFilter.getFilteredLines()).toEqual [0,1,2]
 
     it "accepts advanced regex expressions", ->
@@ -56,29 +56,37 @@ describe "LogView", ->
       expect(logFilter.getFilteredLines()).toEqual [0,1]
 
     it "fetches the currently set filter", ->
-      logView.filterBuffer.setText('INFO')
+      logView.filterBuffer.setText 'INFO'
       logView.filterButton.click()
       expect(logFilter.getFilteredLines()).toEqual [2]
 
     it "works with advanced regex filters", ->
-      logView.filterBuffer.setText('INFO{1}.*')
+      logView.filterBuffer.setText 'INFO{1}.*'
       logView.filterButton.click()
       expect(logFilter.getFilteredLines()).toEqual [2]
 
     it "shows error message on invalid regex", ->
-      logView.filterBuffer.setText('*INFO')
+      logView.filterBuffer.setText '*INFO'
       expect(atom.notifications.getNotifications()).toHaveLength 0
       logView.filterButton.click()
       expect(atom.notifications.getNotifications()).toHaveLength 1
 
     it "removes filter when no input", ->
-      logView.filterBuffer.setText('INFO')
+      logView.filterBuffer.setText 'INFO'
       logView.filterButton.click()
       expect(logFilter.getFilteredLines()).toEqual [2]
 
-      logView.filterBuffer.setText('')
+      logView.filterBuffer.setText ''
       logView.filterBuffer.emitter.emit('did-stop-changing')
       expect(logFilter.getFilteredLines()).toEqual []
+
+    it "can can invert the filter", ->
+      logFilter.performTextFilter '!INFO'
+      expect(logFilter.getFilteredLines()).toEqual [0,1]
+
+    it "inverts with advanced regex filters", ->
+      logFilter.performTextFilter "!\\d{2}:[0-9]{2}\\sD"
+      expect(logFilter.getFilteredLines()).toEqual [2]
 
   describe "filter log levels", ->
     beforeEach ->

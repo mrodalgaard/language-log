@@ -92,7 +92,10 @@ class LogFilter
 
   getRegexFromText: (text) ->
     try
-      new RegExp(text, 'i')
+      if text[0] is '!'
+        new RegExp("^((?!#{text.substr(1)}).)*$", 'i')
+      else
+        new RegExp(text, 'i')
     catch error
       atom.notifications.addWarning('Log Language', detail: 'Invalid filter regex')
       false
