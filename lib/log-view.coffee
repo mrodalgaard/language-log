@@ -3,10 +3,17 @@
 
 LogFilter = require './log-filter'
 
+deprecatedTextEditor = (params) ->
+  if atom.workspace.buildTextEditor?
+    atom.workspace.buildTextEditor(params)
+  else
+    TextEditor = require('atom').TextEditor
+    new TextEditor(params)
+
 module.exports =
 class LogView extends View
   @content: (filterBuffer) ->
-    filterEditor = atom.workspace.buildTextEditor(
+    filterEditor = deprecatedTextEditor(
       mini: true
       tabLength: 2
       softTabs: true
