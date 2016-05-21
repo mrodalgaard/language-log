@@ -201,6 +201,12 @@ describe "LogView", ->
       expect(logView.textEditor.getCursorBufferPosition()).not.toEqual pos
       expect(logView.textEditor.getCursorBufferPosition()).not.toEqual newPos
 
+    it "handles tailing destroyed tabs", ->
+      atom.config.set('language-log.tail', true)
+      logView.textEditor.destroy()
+      logView.tail()
+      expect(logView.textEditor.isDestroyed()).toBe true
+
   describe "timestamp extraction", ->
     beforeEach ->
       waitsForPromise ->

@@ -170,7 +170,8 @@ class LogView extends View
     )
 
   tail: ->
-    return unless atom.config.get('language-log.tail')
+    return unless atom.config.get('language-log.tail') and @textEditor
+    return if @textEditor.isDestroyed()
     @textEditor.moveToBottom()
     @tailing = true
 
