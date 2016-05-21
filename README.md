@@ -8,6 +8,12 @@ Also adds a filtering bottom bar to separate out the statements you are not inte
 
 An Atom grammar that helps you quickly extract the important parts of various log files.
 
+The filtering bottom bar contains the following elements:
+
+* Text filter input which filters based on line text (prepend an exclamation mark (`!`) to perform a reverse filter).
+* Tail button (`⇩`) which enables tailing of log changes (move to the bottom of the file).
+* Level filter buttons which filters based on log level.
+
 ## Supported formats
 
  * [x] Android LogCat
@@ -21,7 +27,7 @@ An Atom grammar that helps you quickly extract the important parts of various lo
  * [x] Common crash logs
  * [x] Common system logs from e.g. ~/Library/Logs/
 
-There are a whole bunch of standard and non-standard log formats out there. This is an attempt to reach the most common I bump into on a weekly basis.
+There are a whole bunch of standard and non-standard log formats out there. Create an [issue](https://github.com/mrodalgaard/language-log/issues/new) (or even better a PR) if you are missing a format.
 
 ## Tasks
 
@@ -37,7 +43,7 @@ There are a whole bunch of standard and non-standard log formats out there. This
 
 ## Notes
 
-Log files above 10,000 lines does not get grammar applied according to Atom.
+Files above 10,000 lines does not get grammar applied according to Atom.
 
 > Contributions, bug reports and feature requests are very welcome.
 
