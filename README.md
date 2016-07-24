@@ -14,6 +14,8 @@ The filtering bottom bar contains the following elements:
 * Tail button (`⇩`) which enables tailing of log changes (move to the bottom of the file).
 * Level filter buttons which filters based on log level.
 
+NOTE: *soft wrap* is disabled by default and can be enabled via the package settings page.
+
 ## Supported formats
 
  * [x] Android LogCat
