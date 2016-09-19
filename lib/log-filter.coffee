@@ -81,7 +81,14 @@ class LogFilter
 
     # Atom folds the line under the selected row
     # and the first line doesn't really fold
-    @textEditor.setSelectedBufferRange([[start - 1, 0], [end, 0]])
+    actualStartLine = start-1
+    actualStartColumn = 0
+    if actualStartLine <= 0
+      actualStartLine = 0
+      actualStartColumn = 0
+    else
+      actualStartColumn = @textEditor.getBuffer().lineLengthForRow(actualStartLine)
+    @textEditor.setSelectedBufferRange([[actualStartLine, actualStartColumn], [end, @textEditor.getBuffer().lineLengthForRow(end)]])
     @textEditor.getSelections()[0].fold()
 
   shouldFilterScopes: (tokens, filterScopes) ->
