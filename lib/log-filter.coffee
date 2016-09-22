@@ -15,6 +15,7 @@ class LogFilter
       text: []
       levels: []
       times: []
+      linesWithTimestamp: []
 
   onDidFinishFilter: (cb) -> @emitter.on 'did-finish-filter', cb
 
@@ -54,6 +55,13 @@ class LogFilter
       tokens = grammar.tokenizeLine(line)
       if @shouldFilterScopes(tokens, scopes) then i else
     @filterLines()
+
+  # XXX: Based on experimental code for log line timestamp extraction
+  performLinesWithTimestampFilter: ->
+    return unless buffer = @textEditor.getBuffer()
+
+    @results.linesWithTimestamp = for line, i in buffer.getLines()
+      if !timestamp = @getLineTimestamp(i) then else i
 
   # XXX: Experimental log line timestamp extraction
   #      Not used in production
