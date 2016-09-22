@@ -43,11 +43,27 @@ class LogFilter
 
     useCompleteLogLines = true
     if useCompleteLogLines
-        @performLinesWithTimestampFilter()
-      linesArray = for line, i in buffer.getLines()
-        if !timestamp = @getLineTimestamp(i) then else i
-      @results.text = for logLine, i in linesArray
-        if regex.test(logLine) then else i
+      linesArray = []
+      linesIndexes = []
+      @performLinesWithTimestampFilter()
+      for line, i in @results.linesWithTimestamp
+        start = line
+        end = line
+        if i + 1 < @results.linesWithTimestamp.length
+          start = line
+          end = @results.linesWithTimestamp[i+1]-1
+        linesArray.push(buffer.getTextInRange([[start, 0], [end, @textEditor.getBuffer().lineLengthForRow(end)]]))
+        indexesForLines = []
+        for lineNumber in [start..end]
+          indexesForLines.push(lineNumber)
+        linesIndexes.push(indexesForLines)
+      lineToDisplayIndexes = []
+      console.log (linesArray)
+      console.log (linesIndexes)
+      for logLine, i in linesArray
+        console.log(regex.test(logLine)+" : ["+i+"]"+logLine)
+        if regex.test(logLine) then else lineToDisplayIndexes = lineToDisplayIndexes.concat(linesIndexes[i])
+      @results.text = lineToDisplayIndexes
     else
       @results.text = for line, i in buffer.getLines()
         if regex.test(line) then else i
