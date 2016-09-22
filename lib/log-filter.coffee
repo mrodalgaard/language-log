@@ -79,10 +79,14 @@ class LogFilter
   foldLineRange: (start, end) ->
     return unless start? and end?
 
+    # By default,as fallback case, we keep the safest possibility,
+    # the fold start at the first character of the first line to fold
     actualStartLine = start
     actualStartColumn = 0
     foldPositionConfig = atom.config.get('language-log.foldPosition')
     if 'end-of-line' == foldPositionConfig
+      # We fold at the end of the last filtered line
+      # except if the first line to fold is the first line in the text editor
       actualStartLine = start-1
       actualStartColumn = 0
       if actualStartLine <= 0
@@ -91,9 +95,11 @@ class LogFilter
       else
         actualStartColumn = @textEditor.getBuffer().lineLengthForRow(actualStartLine)
     else if 'between-lines' == foldPositionConfig
+      # The fold start at the first character of the first line to fold
       actualStartLine = start
       actualStartColumn = 0
 
+    # We fold until the end of the last line to fold
     @textEditor.setSelectedBufferRange([[actualStartLine, actualStartColumn], [end, @textEditor.getBuffer().lineLengthForRow(end)]])
     @textEditor.getSelections()[0].fold()
 
