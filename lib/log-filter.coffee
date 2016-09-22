@@ -41,8 +41,17 @@ class LogFilter
 
     return unless regex
 
-    @results.text = for line, i in buffer.getLines()
-      if regex.test(line) then else i
+    useCompleteLogLines = true
+    if useCompleteLogLines
+        @performLinesWithTimestampFilter()
+      linesArray = for line, i in buffer.getLines()
+        if !timestamp = @getLineTimestamp(i) then else i
+      @results.text = for logLine, i in linesArray
+        if regex.test(logLine) then else i
+    else
+      @results.text = for line, i in buffer.getLines()
+        if regex.test(line) then else i
+    console.log (@results)
     @filterLines()
 
   performLevelFilter: (scopes) ->
