@@ -81,13 +81,21 @@ class LogFilter
 
     # Atom folds the line under the selected row
     # and the first line doesn't really fold
-    actualStartLine = start-1
+    actualStartLine = start
     actualStartColumn = 0
-    if actualStartLine <= 0
-      actualStartLine = 0
+    foldPositionConfig = atom.config.get('language-log.foldPosition')
+    if 'end-of-line' == foldPositionConfig
+      actualStartLine = start-1
       actualStartColumn = 0
-    else
-      actualStartColumn = @textEditor.getBuffer().lineLengthForRow(actualStartLine)
+      if actualStartLine <= 0
+        actualStartLine = 0
+        actualStartColumn = 0
+      else
+        actualStartColumn = @textEditor.getBuffer().lineLengthForRow(actualStartLine)
+    else if 'between-lines' == foldPositionConfig
+      actualStartLine = start
+      actualStartColumn = 0
+
     @textEditor.setSelectedBufferRange([[actualStartLine, actualStartColumn], [end, @textEditor.getBuffer().lineLengthForRow(end)]])
     @textEditor.getSelections()[0].fold()
 

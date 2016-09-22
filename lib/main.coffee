@@ -10,6 +10,14 @@ module.exports = LanguageLog =
     tail:
       type: 'boolean'
       default: false
+    foldPosition:
+      type: 'string'
+      default: 'end-of-line'
+      description: 'Determine if the fold appears at the end of a filtered line or between two filtered lines.'
+      enum: [
+        {value: 'end-of-line', description: 'Fold block at the end of filtered lines.'}
+        {value: 'between-lines', description: 'Fold block between two filtered lines.'}
+      ]
 
   activate: (state) ->
     @disposables = new CompositeDisposable
