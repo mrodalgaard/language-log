@@ -79,8 +79,6 @@ class LogFilter
   foldLineRange: (start, end) ->
     return unless start? and end?
 
-    # Atom folds the line under the selected row
-    # and the first line doesn't really fold
     actualStartLine = start
     actualStartColumn = 0
     foldPositionConfig = atom.config.get('language-log.foldPosition')
