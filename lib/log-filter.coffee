@@ -158,7 +158,12 @@ class LogFilter
   getLineTimestamp: (lineNumber) ->
     for pos in [0..30] by 10
       point = new Point(lineNumber, pos)
-      range = @textEditor.displayBuffer.bufferRangeForScopeAtPosition('timestamp', point)
+      # DEPRECATED
+      # range = @textEditor.displayBuffer.bufferRangeForScopeAtPosition('timestamp', point)
+      # REPLACEMENT
+      @textEditor.setCursorBufferPosition(point)
+      range = @textEditor.bufferRangeForScopeAtCursor('timestamp')
+
       if range and timestamp = @textEditor.getTextInRange(range)
         return @parseTimestamp(timestamp)
 
