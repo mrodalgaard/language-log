@@ -10,6 +10,9 @@ module.exports = LanguageLog =
     tail:
       type: 'boolean'
       default: false
+    caseInsensitive:
+      type: 'boolean'
+      default: true
 
   activate: (state) ->
     @disposables = new CompositeDisposable
