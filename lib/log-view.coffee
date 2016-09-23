@@ -38,6 +38,8 @@ class LogView extends View
             @button outlet: 'filterButton', class: 'btn', 'Filter'
           @div class: 'btn-group', =>
             @button outlet: 'tailButton', class: 'btn btn-icon icon-arrow-down'
+          @div class: 'btn-group', =>
+            @button outlet: 'caseSensistiveButton', class: 'btn', 'Aa'
           @div class: 'btn-group btn-group-level', =>
             @button outlet: 'levelVerboseButton', class: 'btn log-verbose', 'V'
             @button outlet: 'levelInfoButton', class: 'btn log-info', 'I'
@@ -69,6 +71,8 @@ class LogView extends View
       title: "Filter Log Lines"
     @disposables.add atom.tooltips.add @tailButton,
       title: "Tail On File Changes"
+    @disposables.add atom.tooltips.add @caseSensistiveButton,
+      title: "Toggle case sensitivity"
     @disposables.add atom.tooltips.add @levelVerboseButton,
       title: "Toggle Verbose Level"
     @disposables.add atom.tooltips.add @levelInfoButton,
@@ -92,6 +96,7 @@ class LogView extends View
 
     @filterButton.on 'click', => @confirm()
     @tailButton.on 'click', => @toggleTail()
+    @caseSensistiveButton.on 'click', => @toggleCaseSensitivity()
     @levelVerboseButton.on 'click', => @toggleButton('verbose')
     @levelInfoButton.on 'click', => @toggleButton('info')
     @levelDebugButton.on 'click', => @toggleButton('debug')
@@ -116,6 +121,11 @@ class LogView extends View
     @updateButtons()
     @tail()
 
+  toggleCaseSensitivity: ->
+    atom.config.set('language-log.caseInsensitive', !atom.config.get('language-log.caseInsensitive'))
+    @updateButtons()
+    @confirm()
+
   toggleButton: (level) ->
     @settings[level] = if @settings[level] then false else true
     @updateButtons()
@@ -123,6 +133,7 @@ class LogView extends View
 
   updateButtons: ->
     @tailButton.toggleClass('selected', atom.config.get('language-log.tail'))
+    @caseSensistiveButton.toggleClass('selected', !atom.config.get('language-log.caseInsensitive'))
     @levelVerboseButton.toggleClass('selected', @settings.verbose)
     @levelInfoButton.toggleClass('selected', @settings.info)
     @levelDebugButton.toggleClass('selected', @settings.debug)
