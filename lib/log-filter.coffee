@@ -68,6 +68,27 @@ class LogFilter
     else
       @results.text = for line, i in buffer.getLines()
         if regex.test(line) then else i
+
+    console.log (@results)
+    
+    if 0 < @results.text.length
+      resultsTailLength = 2
+      if 0 < resultsTailLength
+        resultsWithTail = []
+        for lineNumber, lineIndex in @results.text
+          resultsWithTail.push(lineNumber)
+          numberOfTailedLine = 0
+          while ( numberOfTailedLine < resultsTailLength ) and lineNumber + numberOfTailedLine + 1 < @textEditor.getLineCount() and lineIndex + 1 < @results.text.length and lineNumber + numberOfTailedLine + 1 < @results.text[lineIndex+1]
+            resultsWithTail.push(lineNumber + numberOfTailedLine + 1)
+            numberOfTailedLine = numberOfTailedLine + 1
+        @results.text = resultsWithTail
+
+      # resultsHeadLength = 2
+      # if 0 < resultsHeadLength
+      #   for num in [@results.text.length..0]
+
+    console.log (@results)
+
     @filterLines()
 
   performLevelFilter: (scopes) ->
