@@ -69,25 +69,24 @@ class LogFilter
       @results.text = for line, i in buffer.getLines()
         if regex.test(line) then else i
 
-    console.log (@results)
-    
+    console.log (@results.text)
+
     if 0 < @results.text.length
-      resultsTailLength = 2
-      if 0 < resultsTailLength
-        resultsWithTail = []
+      resultsHeadLength = 2
+      if 0 < resultsHeadLength
+        resultsWithHead = []
         for lineNumber, lineIndex in @results.text
-          resultsWithTail.push(lineNumber)
-          numberOfTailedLine = 0
-          while ( numberOfTailedLine < resultsTailLength ) and lineNumber + numberOfTailedLine + 1 < @textEditor.getLineCount() and lineIndex + 1 < @results.text.length and lineNumber + numberOfTailedLine + 1 < @results.text[lineIndex+1]
-            resultsWithTail.push(lineNumber + numberOfTailedLine + 1)
-            numberOfTailedLine = numberOfTailedLine + 1
-        @results.text = resultsWithTail
+          # The part of the test with @textEditor.getLineCount() - 1" is due to extra line automatically added at the end of the file
+          if ( lineIndex + resultsHeadLength >= @results.text.length or lineNumber + resultsHeadLength < @results.text[lineIndex + resultsHeadLength] ) and ( lineIndex <= @textEditor.getLineCount() )
+          else
+            resultsWithHead.push(lineNumber)
+        @results.text = resultsWithHead
 
       # resultsHeadLength = 2
       # if 0 < resultsHeadLength
       #   for num in [@results.text.length..0]
 
-    console.log (@results)
+    console.log (@results.text)
 
     @filterLines()
 
