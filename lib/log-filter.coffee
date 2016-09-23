@@ -62,16 +62,12 @@ class LogFilter
           indexesForLines.push(lineNumber)
         linesIndexes.push(indexesForLines)
       lineToDisplayIndexes = []
-      console.log (logEntriesArray)
-      console.log (linesIndexes)
       for logLine, i in logEntriesArray
-        console.log(regex.test(logLine)+" : ["+i+"]"+logLine)
         if regex.test(logLine) then else lineToDisplayIndexes = lineToDisplayIndexes.concat(linesIndexes[i])
       @results.text = lineToDisplayIndexes
     else
       @results.text = for line, i in buffer.getLines()
         if regex.test(line) then else i
-    console.log (@results)
     @filterLines()
 
   performLevelFilter: (scopes) ->
