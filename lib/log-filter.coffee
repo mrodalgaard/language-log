@@ -144,13 +144,21 @@ class LogFilter
 
   getRegexFromText: (text) ->
     try
+      regexpPattern = text
+      regexpFlags = ''
       if text[0] is '!'
-        new RegExp("^((?!#{text.substr(1)}).)*$", 'i')
+        regexpPattern = "^((?!#{text.substr(1)}).)*$"
+      if atom.config.get('language-log.caseInsensitive')
+        regexpFlags += 'i'
+
+      if regexpFlags
+        return new RegExp(regexpPattern, regexpFlags)
       else
-        new RegExp(text, 'i')
+        return new RegExp(regexpPattern)
+
     catch error
       atom.notifications.addWarning('Log Language', detail: 'Invalid filter regex')
-      false
+      return false
 
   removeFilter: ->
     @textEditor.unfoldAll()
