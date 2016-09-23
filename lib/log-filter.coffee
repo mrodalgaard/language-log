@@ -15,6 +15,7 @@ class LogFilter
       text: []
       levels: []
       times: []
+      linesWithTimestamp: []
 
   onDidFinishFilter: (cb) -> @emitter.on 'did-finish-filter', cb
 
@@ -40,8 +41,37 @@ class LogFilter
 
     return unless regex
 
-    @results.text = for line, i in buffer.getLines()
-      if regex.test(line) then else i
+    if atom.config.get('language-log.useMultiLinesLogEntrySupport')
+      # We build a list of log entries, instead of lines,
+      # to be able to parse an entry at once and as a whole
+      logEntriesArray = []
+      # To stick to the original way the folding is done,
+      # because now we are working with several lines at a time,
+      # we need to fill for each recognized log entry a list of lines instead of a single one.
+      linesIndexes = []
+      @performLinesWithTimestampFilter()
+      for line, i in @results.linesWithTimestamp
+        start = line
+        end = line
+        if i + 1 < @results.linesWithTimestamp.length
+          start = line
+          end = @results.linesWithTimestamp[i+1]-1
+        logEntriesArray.push(buffer.getTextInRange([[start, 0], [end, @textEditor.getBuffer().lineLengthForRow(end)]]))
+        indexesForLines = []
+        for lineNumber in [start..end]
+          indexesForLines.push(lineNumber)
+        linesIndexes.push(indexesForLines)
+      lineToDisplayIndexes = []
+      console.log (logEntriesArray)
+      console.log (linesIndexes)
+      for logLine, i in logEntriesArray
+        console.log(regex.test(logLine)+" : ["+i+"]"+logLine)
+        if regex.test(logLine) then else lineToDisplayIndexes = lineToDisplayIndexes.concat(linesIndexes[i])
+      @results.text = lineToDisplayIndexes
+    else
+      @results.text = for line, i in buffer.getLines()
+        if regex.test(line) then else i
+    console.log (@results)
     @filterLines()
 
   performLevelFilter: (scopes) ->
@@ -54,6 +84,13 @@ class LogFilter
       tokens = grammar.tokenizeLine(line)
       if @shouldFilterScopes(tokens, scopes) then i else
     @filterLines()
+
+  # XXX: Based on experimental code for log line timestamp extraction
+  performLinesWithTimestampFilter: ->
+    return unless buffer = @textEditor.getBuffer()
+
+    @results.linesWithTimestamp = for line, i in buffer.getLines()
+      if !timestamp = @getLineTimestamp(i) then else i
 
   # XXX: Experimental log line timestamp extraction
   #      Not used in production
@@ -125,7 +162,12 @@ class LogFilter
   getLineTimestamp: (lineNumber) ->
     for pos in [0..30] by 10
       point = new Point(lineNumber, pos)
-      range = @textEditor.displayBuffer.bufferRangeForScopeAtPosition('timestamp', point)
+      # DEPRECATED
+      # range = @textEditor.displayBuffer.bufferRangeForScopeAtPosition('timestamp', point)
+      # REPLACEMENT
+      @textEditor.setCursorBufferPosition(point)
+      range = @textEditor.bufferRangeForScopeAtCursor('timestamp')
+
       if range and timestamp = @textEditor.getTextInRange(range)
         return @parseTimestamp(timestamp)
 
