@@ -10,6 +10,11 @@ module.exports = LanguageLog =
     tail:
       type: 'boolean'
       default: false
+    useMultiLinesLogEntrySupport:
+      type: 'boolean'
+      title: 'Use multi-lines Log entry support'
+      default: false
+      description: 'Let displayed the whole log entry after filter instead of only the line even if the log entry has several lines.'
 
   activate: (state) ->
     @disposables = new CompositeDisposable
