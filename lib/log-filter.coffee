@@ -41,8 +41,7 @@ class LogFilter
 
     return unless regex
 
-    useCompleteLogLines = true
-    if useCompleteLogLines
+    if atom.config.get('language-log.useMultiLinesLogEntrySupport')
       linesArray = []
       linesIndexes = []
       @performLinesWithTimestampFilter()
