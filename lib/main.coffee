@@ -26,6 +26,16 @@ module.exports = LanguageLog =
     caseInsensitive:
       type: 'boolean'
       default: true
+    precedingFilteredExpansion:
+      type: 'integer'
+      title: 'Number of preceding lines displayed'
+      default: 0
+      minimum: 0
+    followingFilteredExpansion:
+      type: 'integer'
+      title: 'Number of following lines displayed'
+      default: 0
+      minimum: 0
 
   activate: (state) ->
     @disposables = new CompositeDisposable

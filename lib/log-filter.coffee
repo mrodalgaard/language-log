@@ -68,6 +68,25 @@ class LogFilter
     else
       @results.text = for line, i in buffer.getLines()
         if regex.test(line) then else i
+
+    if 0 < @results.text.length
+      resultsHeadLength = atom.config.get('language-log.precedingFilteredExpansion')
+      if 0 < resultsHeadLength
+        resultsWithHead = []
+        for lineNumber, lineIndex in @results.text
+          if ( lineIndex + resultsHeadLength < @results.text.length and lineNumber + resultsHeadLength >= @results.text[lineIndex + resultsHeadLength] ) or ( lineIndex + resultsHeadLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( @textEditor.getLineCount() - lineNumber ) )
+            resultsWithHead.push(lineNumber)
+        @results.text = resultsWithHead
+      resultsTailLength = atom.config.get('language-log.followingFilteredExpansion')
+      if 0 < resultsTailLength
+        resultsWithTail = []
+        @results.text.reverse()
+        for lineNumber, lineIndex in @results.text
+          if ( lineIndex + resultsTailLength < @results.text.length and lineNumber - resultsTailLength <= @results.text[lineIndex + resultsTailLength] ) or ( lineIndex + resultsTailLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( lineNumber + 1 ) )
+            resultsWithTail.push(lineNumber)
+        resultsWithTail.reverse()
+        @results.text = resultsWithTail
+
     @filterLines()
 
   performLevelFilter: (scopes) ->
