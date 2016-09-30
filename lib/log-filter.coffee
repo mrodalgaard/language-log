@@ -76,7 +76,7 @@ class LogFilter
       if 0 < resultsHeadLength
         resultsWithHead = []
         for lineNumber, lineIndex in @results.text
-          if !( lineIndex + resultsHeadLength >= @results.text.length or lineNumber + resultsHeadLength < @results.text[lineIndex + resultsHeadLength] ) and ( lineNumber + resultsHeadLength <= @textEditor.getLineCount() - 1 )
+          if ( lineIndex + resultsHeadLength < @results.text.length and lineNumber + resultsHeadLength >= @results.text[lineIndex + resultsHeadLength] ) or ( lineIndex + resultsHeadLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( @textEditor.getLineCount() - lineNumber ) )
             resultsWithHead.push(lineNumber)
         @results.text = resultsWithHead
 
