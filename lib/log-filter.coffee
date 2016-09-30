@@ -72,13 +72,11 @@ class LogFilter
     console.log (@results.text)
 
     if 0 < @results.text.length
-      resultsHeadLength = 2
+      resultsHeadLength = 0
       if 0 < resultsHeadLength
         resultsWithHead = []
         for lineNumber, lineIndex in @results.text
-          # The part of the test with @textEditor.getLineCount() - 1" is due to extra line automatically added at the end of the file
-          if ( lineIndex + resultsHeadLength >= @results.text.length or lineNumber + resultsHeadLength < @results.text[lineIndex + resultsHeadLength] ) and ( lineIndex <= @textEditor.getLineCount() )
-          else
+          if !( lineIndex + resultsHeadLength >= @results.text.length or lineNumber + resultsHeadLength < @results.text[lineIndex + resultsHeadLength] ) and ( lineNumber + resultsHeadLength <= @textEditor.getLineCount() - 1 )
             resultsWithHead.push(lineNumber)
         @results.text = resultsWithHead
 
