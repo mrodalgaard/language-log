@@ -26,6 +26,16 @@ module.exports = LanguageLog =
       title: 'Use multi-lines Log entry support'
       default: false
       description: 'Let displayed the whole log entry after filter instead of only the line even if the log entry has several lines.'
+    precedingFilteredExpansion:
+      type: 'integer'
+      title: 'Number of preceding lines displayed'
+      default: 0
+      minimum: 0
+    followingFilteredExpansion:
+      type: 'integer'
+      title: 'Number of following lines displayed'
+      default: 0
+      minimum: 0
 
   activate: (state) ->
     @disposables = new CompositeDisposable

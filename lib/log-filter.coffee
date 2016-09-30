@@ -72,7 +72,7 @@ class LogFilter
     console.log (@results.text)
 
     if 0 < @results.text.length
-      resultsHeadLength = 0
+      resultsHeadLength = atom.config.get('language-log.precedingFilteredExpansion')
       if 0 < resultsHeadLength
         resultsWithHead = []
         for lineNumber, lineIndex in @results.text
