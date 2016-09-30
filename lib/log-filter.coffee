@@ -83,18 +83,11 @@ class LogFilter
       if 0 < resultsTailLength
         resultsWithTail = []
         @results.text.reverse()
-        # for lineNumber, lineIndex in @results.text
-        #   if !( lineIndex + resultsTailLength >= @results.text.length or lineNumber - resultsTailLength < @results.text[lineIndex + resultsTailLength] ) and ( lineNumber - resultsTailLength >= 0 )
-        #     resultsWithTail.push(lineNumber)
         for lineNumber, lineIndex in @results.text
-          if ( lineIndex + resultsTailLength < @results.text.length and lineNumber - resultsTailLength <= @results.text[lineIndex + resultsTailLength] ) or ( lineIndex + resultsTailLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( @textEditor.getLineCount() - lineNumber ) )
+          if ( lineIndex + resultsTailLength < @results.text.length and lineNumber - resultsTailLength <= @results.text[lineIndex + resultsTailLength] ) or ( lineIndex + resultsTailLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( lineNumber + 1 ) )
             resultsWithTail.push(lineNumber)
         resultsWithTail.reverse()
         @results.text = resultsWithTail
-
-      # resultsHeadLength = 2
-      # if 0 < resultsHeadLength
-      #   for num in [@results.text.length..0]
 
     console.log (@results.text)
 
