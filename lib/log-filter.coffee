@@ -69,8 +69,6 @@ class LogFilter
       @results.text = for line, i in buffer.getLines()
         if regex.test(line) then else i
 
-    console.log (@results.text)
-
     if 0 < @results.text.length
       resultsHeadLength = atom.config.get('language-log.precedingFilteredExpansion')
       if 0 < resultsHeadLength
@@ -88,8 +86,6 @@ class LogFilter
             resultsWithTail.push(lineNumber)
         resultsWithTail.reverse()
         @results.text = resultsWithTail
-
-    console.log (@results.text)
 
     @filterLines()
 
