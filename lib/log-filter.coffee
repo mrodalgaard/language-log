@@ -79,6 +79,18 @@ class LogFilter
           if ( lineIndex + resultsHeadLength < @results.text.length and lineNumber + resultsHeadLength >= @results.text[lineIndex + resultsHeadLength] ) or ( lineIndex + resultsHeadLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( @textEditor.getLineCount() - lineNumber ) )
             resultsWithHead.push(lineNumber)
         @results.text = resultsWithHead
+      resultsTailLength = atom.config.get('language-log.followingFilteredExpansion')
+      if 0 < resultsTailLength
+        resultsWithTail = []
+        @results.text.reverse()
+        # for lineNumber, lineIndex in @results.text
+        #   if !( lineIndex + resultsTailLength >= @results.text.length or lineNumber - resultsTailLength < @results.text[lineIndex + resultsTailLength] ) and ( lineNumber - resultsTailLength >= 0 )
+        #     resultsWithTail.push(lineNumber)
+        for lineNumber, lineIndex in @results.text
+          if ( lineIndex + resultsTailLength < @results.text.length and lineNumber - resultsTailLength <= @results.text[lineIndex + resultsTailLength] ) or ( lineIndex + resultsTailLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( @textEditor.getLineCount() - lineNumber ) )
+            resultsWithTail.push(lineNumber)
+        resultsWithTail.reverse()
+        @results.text = resultsWithTail
 
       # resultsHeadLength = 2
       # if 0 < resultsHeadLength
