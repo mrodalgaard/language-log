@@ -64,6 +64,7 @@ class LogView extends View
       error: true
 
     @handleEvents()
+    @handleConfigChanges()
     @updateButtons()
     @updateDescription()
 
@@ -111,6 +112,10 @@ class LogView extends View
       @updateDescription()
 
     @on 'focus', => @filterEditorView.focus()
+
+  handleConfigChanges: ->
+    @disposables.add atom.config.onDidChange 'language-log.adjacentLines', =>
+      @confirm()
 
   destroy: ->
     @disposables.dispose()

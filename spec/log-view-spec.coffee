@@ -14,6 +14,9 @@ describe "LogView", ->
     count = logView.textEditor.getLineCount() - 1
     i for i in [0..count] when logView.textEditor.isFoldedAtBufferRow(i)
 
+  getFilteredLines = ->
+    logFilter.results.text.join('')
+
   beforeEach ->
     text = "12:34 INFO: 1\n12:34 INFO: 2\n12:34 DEBUG: 3"
     buffer = new TextBuffer(text)
@@ -214,6 +217,38 @@ describe "LogView", ->
       logView.textEditor.destroy()
       logView.tail()
       expect(logView.textEditor.isDestroyed()).toBe true
+
+  describe "adjacentLines", ->
+    beforeEach ->
+      logView.textEditor.setText "a\nb\nc\nd\ne\nf\ng"
+
+    it "shows adjacent lines", ->
+      logView.filterBuffer.setText 'd'
+
+      atom.config.set('language-log.adjacentLines', 0)
+      expect(logFilter.getFilteredLines()).toHaveLength 6
+      expect(getFilteredLines()).toBe "012456"
+
+      atom.config.set('language-log.adjacentLines', 1)
+      expect(logFilter.getFilteredLines()).toHaveLength 4
+      expect(getFilteredLines()).toBe "0156"
+
+    it "handles out of bounds adjacent lines", ->
+      logView.filterBuffer.setText 'a'
+
+      atom.config.set('language-log.adjacentLines', 0)
+      expect(getFilteredLines()).toBe "123456"
+      atom.config.set('language-log.adjacentLines', 2)
+      expect(getFilteredLines()).toBe "3456"
+      atom.config.set('language-log.adjacentLines', 10)
+      expect(getFilteredLines()).toBe ""
+
+      logView.filterBuffer.setText 'f'
+
+      atom.config.set('language-log.adjacentLines', 1)
+      expect(getFilteredLines()).toBe "0123"
+      atom.config.set('language-log.adjacentLines', 2)
+      expect(getFilteredLines()).toBe "012"
 
   describe "timestamp extraction", ->
     beforeEach ->

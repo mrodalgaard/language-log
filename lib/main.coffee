@@ -10,6 +10,7 @@ module.exports = LanguageLog =
     tail:
       type: 'boolean'
       default: false
+      title: 'Tail log on changes'
     foldPosition:
       type: 'string'
       default: 'end-of-line'
@@ -22,18 +23,13 @@ module.exports = LanguageLog =
       type: 'boolean'
       title: 'Use multi-lines Log entry support'
       default: false
-      description: 'Let displayed the whole log entry after filter instead of only the line even if the log entry has several lines.'
+      description: 'Displays the whole log entry after filter instead of only the line even if the log entry has several lines.'
     caseInsensitive:
       type: 'boolean'
       default: true
-    precedingFilteredExpansion:
+    adjacentLines:
       type: 'integer'
-      title: 'Number of preceding lines displayed'
-      default: 0
-      minimum: 0
-    followingFilteredExpansion:
-      type: 'integer'
-      title: 'Number of following lines displayed'
+      title: 'Number of lines displayed above and below filter result'
       default: 0
       minimum: 0
 
