@@ -15,6 +15,7 @@ class LogFilter
       text: []
       levels: []
       times: []
+      linesWithTimestamp: []
 
   onDidFinishFilter: (cb) -> @emitter.on 'did-finish-filter', cb
 
@@ -40,8 +41,52 @@ class LogFilter
 
     return unless regex
 
-    @results.text = for line, i in buffer.getLines()
-      if regex.test(line) then else i
+    if atom.config.get('language-log.useMultiLinesLogEntrySupport')
+      # We build a list of log entries, instead of lines,
+      # to be able to parse an entry at once and as a whole
+      logEntriesArray = []
+      # To stick to the original way the folding is done,
+      # because now we are working with several lines at a time,
+      # we need to fill for each recognized log entry a list of lines instead of a single one.
+      linesIndexes = []
+      @performLinesWithTimestampFilter()
+      for line, i in @results.linesWithTimestamp
+        start = line
+        end = line
+        if i + 1 < @results.linesWithTimestamp.length
+          start = line
+          end = @results.linesWithTimestamp[i+1]-1
+        logEntriesArray.push(buffer.getTextInRange([[start, 0], [end, @textEditor.getBuffer().lineLengthForRow(end)]]))
+        indexesForLines = []
+        for lineNumber in [start..end]
+          indexesForLines.push(lineNumber)
+        linesIndexes.push(indexesForLines)
+      lineToDisplayIndexes = []
+      for logLine, i in logEntriesArray
+        if regex.test(logLine) then else lineToDisplayIndexes = lineToDisplayIndexes.concat(linesIndexes[i])
+      @results.text = lineToDisplayIndexes
+    else
+      @results.text = for line, i in buffer.getLines()
+        if regex.test(line) then else i
+
+    if 0 < @results.text.length
+      resultsHeadLength = atom.config.get('language-log.precedingFilteredExpansion')
+      if 0 < resultsHeadLength
+        resultsWithHead = []
+        for lineNumber, lineIndex in @results.text
+          if ( lineIndex + resultsHeadLength < @results.text.length and lineNumber + resultsHeadLength >= @results.text[lineIndex + resultsHeadLength] ) or ( lineIndex + resultsHeadLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( @textEditor.getLineCount() - lineNumber ) )
+            resultsWithHead.push(lineNumber)
+        @results.text = resultsWithHead
+      resultsTailLength = atom.config.get('language-log.followingFilteredExpansion')
+      if 0 < resultsTailLength
+        resultsWithTail = []
+        @results.text.reverse()
+        for lineNumber, lineIndex in @results.text
+          if ( lineIndex + resultsTailLength < @results.text.length and lineNumber - resultsTailLength <= @results.text[lineIndex + resultsTailLength] ) or ( lineIndex + resultsTailLength >= @results.text.length and 0 == ( @results.text.length - lineIndex ) - ( lineNumber + 1 ) )
+            resultsWithTail.push(lineNumber)
+        resultsWithTail.reverse()
+        @results.text = resultsWithTail
+
     @filterLines()
 
   performLevelFilter: (scopes) ->
@@ -54,6 +99,13 @@ class LogFilter
       tokens = grammar.tokenizeLine(line)
       if @shouldFilterScopes(tokens, scopes) then i else
     @filterLines()
+
+  # XXX: Based on experimental code for log line timestamp extraction
+  performLinesWithTimestampFilter: ->
+    return unless buffer = @textEditor.getBuffer()
+
+    @results.linesWithTimestamp = for line, i in buffer.getLines()
+      if !timestamp = @getLineTimestamp(i) then else i
 
   # XXX: Experimental log line timestamp extraction
   #      Not used in production
@@ -79,9 +131,28 @@ class LogFilter
   foldLineRange: (start, end) ->
     return unless start? and end?
 
-    # Atom folds the line under the selected row
-    # and the first line doesn't really fold
-    @textEditor.setSelectedBufferRange([[start - 1, 0], [end, 0]])
+    # By default,as fallback case, we keep the safest possibility,
+    # the fold start at the first character of the first line to fold
+    actualStartLine = start
+    actualStartColumn = 0
+    foldPositionConfig = atom.config.get('language-log.foldPosition')
+    if 'end-of-line' == foldPositionConfig
+      # We fold at the end of the last filtered line
+      # except if the first line to fold is the first line in the text editor
+      actualStartLine = start-1
+      actualStartColumn = 0
+      if actualStartLine <= 0
+        actualStartLine = 0
+        actualStartColumn = 0
+      else
+        actualStartColumn = @textEditor.getBuffer().lineLengthForRow(actualStartLine)
+    else if 'between-lines' == foldPositionConfig
+      # The fold start at the first character of the first line to fold
+      actualStartLine = start
+      actualStartColumn = 0
+
+    # We fold until the end of the last line to fold
+    @textEditor.setSelectedBufferRange([[actualStartLine, actualStartColumn], [end, @textEditor.getBuffer().lineLengthForRow(end)]])
     @textEditor.getSelections()[0].fold()
 
   shouldFilterScopes: (tokens, filterScopes) ->
@@ -92,13 +163,21 @@ class LogFilter
 
   getRegexFromText: (text) ->
     try
+      regexpPattern = text
+      regexpFlags = ''
       if text[0] is '!'
-        new RegExp("^((?!#{text.substr(1)}).)*$", 'i')
+        regexpPattern = "^((?!#{text.substr(1)}).)*$"
+      if atom.config.get('language-log.caseInsensitive')
+        regexpFlags += 'i'
+
+      if regexpFlags
+        return new RegExp(regexpPattern, regexpFlags)
       else
-        new RegExp(text, 'i')
+        return new RegExp(regexpPattern)
+
     catch error
       atom.notifications.addWarning('Log Language', detail: 'Invalid filter regex')
-      false
+      return false
 
   removeFilter: ->
     @textEditor.unfoldAll()
@@ -106,7 +185,12 @@ class LogFilter
   getLineTimestamp: (lineNumber) ->
     for pos in [0..30] by 10
       point = new Point(lineNumber, pos)
-      range = @textEditor.displayBuffer.bufferRangeForScopeAtPosition('timestamp', point)
+      # DEPRECATED
+      # range = @textEditor.displayBuffer.bufferRangeForScopeAtPosition('timestamp', point)
+      # REPLACEMENT
+      @textEditor.setCursorBufferPosition(point)
+      range = @textEditor.bufferRangeForScopeAtCursor('timestamp')
+
       if range and timestamp = @textEditor.getTextInRange(range)
         return @parseTimestamp(timestamp)
 

@@ -10,6 +10,32 @@ module.exports = LanguageLog =
     tail:
       type: 'boolean'
       default: false
+    foldPosition:
+      type: 'string'
+      default: 'end-of-line'
+      description: 'Determine if the fold appears at the end of a filtered line or between two filtered lines.'
+      enum: [
+        {value: 'end-of-line', description: 'Fold block at the end of filtered lines.'}
+        {value: 'between-lines', description: 'Fold block between two filtered lines.'}
+      ]
+    useMultiLinesLogEntrySupport:
+      type: 'boolean'
+      title: 'Use multi-lines Log entry support'
+      default: false
+      description: 'Let displayed the whole log entry after filter instead of only the line even if the log entry has several lines.'
+    caseInsensitive:
+      type: 'boolean'
+      default: true
+    precedingFilteredExpansion:
+      type: 'integer'
+      title: 'Number of preceding lines displayed'
+      default: 0
+      minimum: 0
+    followingFilteredExpansion:
+      type: 'integer'
+      title: 'Number of following lines displayed'
+      default: 0
+      minimum: 0
 
   activate: (state) ->
     @disposables = new CompositeDisposable
