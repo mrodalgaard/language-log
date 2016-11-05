@@ -12,6 +12,7 @@ The filtering bottom bar contains the following elements:
 
 * Text filter input which filters based on line text (prepend an exclamation mark (`!`) to perform a reverse filter).
 * Tail button (`⇩`) which enables tailing of log changes (move to the bottom of the file).
+* Case sensitive/insensitive search button (`Aa`).
 * Level filter buttons which filters based on log level.
 
 NOTE: *soft wrap* is disabled by default and can be enabled via the package settings page.

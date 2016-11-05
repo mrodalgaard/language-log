@@ -10,7 +10,6 @@ module.exports = LanguageLog =
     tail:
       type: 'boolean'
       default: false
-      title: 'Tail log on changes'
     foldPosition:
       type: 'string'
       default: 'end-of-line'
