@@ -23,7 +23,9 @@ module.exports = LanguageLog =
       type: 'boolean'
       title: 'Use multi-lines Log entry support'
       default: false
-      description: 'Displays the whole log entry after filter instead of only the line even if the log entry has several lines.'
+      description: """
+        Displays the whole log entry after filter instead of only the line even if the log entry has several lines.
+        """
     caseInsensitive:
       type: 'boolean'
       default: true

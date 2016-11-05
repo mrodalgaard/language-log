@@ -73,18 +73,21 @@ class LogFilter
     @filterLines()
 
   addAdjacentLines: (textResults) ->
-    if adjacentLines = atom.config.get('language-log.adjacentLines')
+    if adjLines = atom.config.get('language-log.adjacentLines')
+      total = @textEditor.getLineCount()
       temp = []
 
       for lineNumber, lineIndex in textResults
-        if ( lineIndex + adjacentLines < textResults.length and lineNumber + adjacentLines >= textResults[lineIndex + adjacentLines] ) or ( lineIndex + adjacentLines >= textResults.length and 0 == ( textResults.length - lineIndex ) - ( @textEditor.getLineCount() - lineNumber ) )
+        if (lineIndex + adjLines < textResults.length and lineNumber + adjLines >= textResults[lineIndex + adjLines]) or
+           (lineIndex + adjLines >= textResults.length and (textResults.length - lineIndex) - (total - lineNumber) == 0)
           temp.push lineNumber
 
       textResults = temp.reverse()
       temp = []
 
       for lineNumber, lineIndex in textResults
-        if ( lineIndex + adjacentLines < textResults.length and lineNumber - adjacentLines <= textResults[lineIndex + adjacentLines] ) or ( lineIndex + adjacentLines >= textResults.length and 0 == ( textResults.length - lineIndex ) - ( lineNumber + 1 ) )
+        if (lineIndex + adjLines < textResults.length and lineNumber - adjLines <= textResults[lineIndex + adjLines]) or
+           (lineIndex + adjLines >= textResults.length and 0 == (textResults.length - lineIndex) - (lineNumber + 1))
           temp.push lineNumber
 
       return temp.reverse()
@@ -153,7 +156,9 @@ class LogFilter
       actualStartColumn = 0
 
     # We fold until the end of the last line to fold
-    @textEditor.setSelectedBufferRange([[actualStartLine, actualStartColumn], [end, @textEditor.getBuffer().lineLengthForRow(end)]])
+    start = [actualStartLine, actualStartColumn]
+    end = [end, @textEditor.getBuffer().lineLengthForRow(end)]
+    @textEditor.setSelectedBufferRange([start, end])
     @textEditor.getSelections()[0].fold()
 
   shouldFilterScopes: (tokens, filterScopes) ->
