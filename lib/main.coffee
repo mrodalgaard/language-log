@@ -20,7 +20,7 @@ module.exports = LanguageLog =
       ]
     useMultiLinesLogEntrySupport:
       type: 'boolean'
-      title: 'Use multi-lines Log entry support'
+      title: 'Use multi-lines log entry support (experimental)'
       default: false
       description: """
         Displays the whole log entry after filter instead of only the line even if the log entry has several lines.
@@ -30,7 +30,7 @@ module.exports = LanguageLog =
       default: true
     adjacentLines:
       type: 'integer'
-      title: 'Number of lines displayed above and below filter result'
+      title: 'Number of lines displayed above and below filter result:'
       default: 0
       minimum: 0
 
