@@ -102,6 +102,20 @@ describe 'Atom log grammar', ->
     expect(tokens[0]).toEqual value: '02-12 17:36:40.190', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: 'E ANDR-PERF-LOCK:', scopes: ['source.log', 'definition.log.log-error']
 
+  it 'parses Android Marshmallow logs', ->
+    expect(getGrammar('01-15 20:44:02.331  2149  2905 W GLSUser : ')).toBe 'Log'
+
+    line = '01-15 20:42:22.907  1578  1589 D ActivityManager: cleanUpApplicationRecord -- 2762'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '01-15 20:42:22.907', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'D ActivityManager:', scopes: ['source.log', 'definition.log.log-debug']
+
+    line = '10-13 07:28:57.654  2814  2828 I TestRunner: 	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:87)'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '10-13 07:28:57.654', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'I TestRunner:', scopes: ['source.log', 'definition.log.log-info']
+    expect(tokens[4]).toEqual value: '(RunnerBuilder.java:87)', scopes: ['source.log', 'definition.log.string.location']
+
   it 'parses iOS logs', ->
     expect(getGrammar('[2015-09-17 16:37:57 CEST] <main> INFO')).toBe 'Log'
 

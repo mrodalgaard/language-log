@@ -164,6 +164,10 @@
         'match': '.* GC_FOR_ALLOC .*'
         'name': 'definition.log.log-verbose'
       }
+      {
+        'match': '\\([a-zA-Z:]+.*:[0-9]+\\)$'
+        'name': 'definition.log.string.location'
+      }
     ]
   'ios':
     'patterns': [
