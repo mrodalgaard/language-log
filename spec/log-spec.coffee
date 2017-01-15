@@ -152,6 +152,14 @@ describe 'Atom log grammar', ->
     expect(tokens[1]).toEqual value: '"your-protocol"', scopes: ['source.log', 'log.string.double']
     expect(tokens[3]).toEqual value: 'your-protocol://open?file=file&line=line', scopes: ['source.log', 'keyword.log.url']
 
+  it 'parses syslog', ->
+    expect(getGrammar('May 11 11:32:40 scrooge SG_child[1829]: [ID')).toBe 'Log'
+
+    line = 'May 11 10:40:48 scrooge disk-health-nurse[26783]: [ID 702911 user.error] m:SY-mon-full-500 c:H : partition'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: 'May 11 10:40:48', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: '[ID 702911 user.error]', scopes: ['source.log', 'definition.log.log-info']
+
   it 'parses Apache logs', ->
     expect(getGrammar('64.242.88.10 - - [07/Mar/2004:16:45:56 -0800]')).toBe 'Log'
     expect(getGrammar('[07/Mar/2004:16:24:16] "GET /twiki/bin/view/M')).toBe 'Log'

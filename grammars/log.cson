@@ -27,6 +27,7 @@
   {'include': '#android'}
   {'include': '#ios'}
   {'include': '#idea'}
+  {'include': '#syslog'}
   {'include': '#apache'}
   {'include': '#nabto'}
   {'include': '#adobe'}
@@ -165,7 +166,7 @@
         'name': 'definition.log.log-verbose'
       }
       {
-        'match': '\\([a-zA-Z:]+.*:[0-9]+\\)$'
+        'match': '\\([a-zA-Z:]+[^ ]*:[0-9]+\\)$'
         'name': 'definition.log.string.location'
       }
     ]
@@ -192,6 +193,13 @@
       }
       {
         'match': '\\[[0-9\ ]*\\].*INFO(?= )'
+        'name': 'definition.log.log-info'
+      }
+    ]
+  'syslog':
+    'patterns': [
+      {
+        'match': '\\[[a-zA-Z]+ [0-9]+ [^ ]*\\]'
         'name': 'definition.log.log-info'
       }
     ]
