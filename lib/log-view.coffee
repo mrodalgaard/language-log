@@ -41,11 +41,11 @@ class LogView extends View
           @div class: 'btn-group', =>
             @button outlet: 'caseSensistiveButton', class: 'btn', 'Aa'
           @div class: 'btn-group btn-group-level', =>
-            @button outlet: 'levelVerboseButton', class: 'btn log-verbose', 'V'
-            @button outlet: 'levelInfoButton', class: 'btn log-info', 'I'
-            @button outlet: 'levelDebugButton', class: 'btn log-debug', 'D'
-            @button outlet: 'levelWarningButton', class: 'btn log-warning', 'W'
-            @button outlet: 'levelErrorButton', class: 'btn log-error', 'E'
+            @button outlet: 'levelVerboseButton', class: 'btn syntax--log-verbose', 'V'
+            @button outlet: 'levelInfoButton', class: 'btn syntax--log-info', 'I'
+            @button outlet: 'levelDebugButton', class: 'btn syntax--log-debug', 'D'
+            @button outlet: 'levelWarningButton', class: 'btn syntax--log-warning', 'W'
+            @button outlet: 'levelErrorButton', class: 'btn syntax--log-error', 'E'
 
   constructor: (@textEditor) ->
     @filterBuffer = new TextBuffer
