@@ -72,6 +72,7 @@ describe "Log", ->
         expect(logModule.logView.settings.verbose).toEqual false
 
     it "toggles on grammar change from log", ->
+      atom.config.set 'language-log.showFilterBar', true
       waitsForPromise ->
         atom.packages.activatePackage('language-text')
         atom.workspace.open 'android.log'
