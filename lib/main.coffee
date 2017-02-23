@@ -68,6 +68,7 @@ module.exports = LanguageLog =
 
   removeLogPanel: ->
     @logPanel?.destroy()
+    @logPanel = null
 
   toggleLogPanel: ->
     if @logPanel?
