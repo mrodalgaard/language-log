@@ -40,6 +40,8 @@ module.exports = LanguageLog =
 
     @disposables.add atom.workspace.observeActivePaneItem (item) =>
       @itemUpdate(item)
+      
+    atom.commands.add 'atom-workspace', 'log:toggle-log-panel', => @toggleLogPanel()
 
   deactivate: ->
     @disposables.dispose()
@@ -52,11 +54,10 @@ module.exports = LanguageLog =
 
     @grammarDisposable.add item.observeGrammar? (grammar) =>
       @removeLogPanel()
-      @addLogPanel(item) if grammar.name is 'Log'
+      if grammar.name is 'Log' && atom.config.get 'language-log.showFilterBar'
+        @addLogPanel(item)
 
   addLogPanel: (textEditor) ->
-    return unless atom.config.get 'language-log.showFilterBar'
-
     # Create new log view if opened log differs from previous
     unless @logView?.textEditor is textEditor
       LogView ?= require './log-view'
@@ -67,3 +68,10 @@ module.exports = LanguageLog =
 
   removeLogPanel: ->
     @logPanel?.destroy()
+    @logPanel = null
+
+  toggleLogPanel: ->
+    if @logPanel?
+      @removeLogPanel()
+    else
+      @addLogPanel(atom.workspace.getActiveTextEditor())

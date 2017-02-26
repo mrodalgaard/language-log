@@ -72,6 +72,7 @@ describe "Log", ->
         expect(logModule.logView.settings.verbose).toEqual false
 
     it "toggles on grammar change from log", ->
+      atom.config.set 'language-log.showFilterBar', true
       waitsForPromise ->
         atom.packages.activatePackage('language-text')
         atom.workspace.open 'android.log'
@@ -113,3 +114,24 @@ describe "Log", ->
         expect(workspaceElement.querySelector('.log-view')).toExist()
         atom.workspace.getActivePane().activatePreviousItem()
         expect(workspaceElement.querySelector('.log-view')).not.toExist()
+
+  describe "toggle-log-panel", ->
+    it "opens the log panel if it is disabled", ->
+      waitsForPromise ->
+        atom.workspace.open '../log-spec.coffee'
+      runs ->
+        expect(workspaceElement.querySelector('.log-panel')).not.toExist()
+
+        atom.commands.dispatch(atom.views.getView(atom.workspace), 'log:toggle-log-panel')
+
+        expect(workspaceElement.querySelector('.log-panel')).toExist()
+
+    it "closes the log panel if it is enabled", ->
+      waitsForPromise ->
+        atom.workspace.open 'android.log'
+      runs ->
+        expect(workspaceElement.querySelector('.log-panel')).toExist()
+
+        atom.commands.dispatch(atom.views.getView(atom.workspace), 'log:toggle-log-panel')
+
+        expect(workspaceElement.querySelector('.log-panel')).not.toExist()
