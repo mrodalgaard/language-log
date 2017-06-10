@@ -112,11 +112,11 @@
   'android':
     'patterns': [
       {
-        'match': '[A|E]\/.*?[﹕|:]'
+        'match': '[A|E|F]\/.*?[﹕|:]'
         'name': 'definition.log.log-error'
       }
       {
-        'match': ' +[0-9\-]+ +[0-9\-]+ ([A|E] .*?[﹕|:])'
+        'match': ' +[0-9\-]+ +[0-9\-]+ ([A|E|F] .*?[﹕|:])'
         'captures':
           '1':
             'name': 'definition.log.log-error'
