@@ -43,9 +43,10 @@ describe "Log", ->
       runs ->
         expect(workspaceElement.querySelector('.log-view')).toExist()
 
+        nPanes = atom.workspace.getPanes().length
         pane = atom.workspace.getActivePane()
         pane.splitRight()
-        expect(atom.workspace.getPanes()).toHaveLength 2
+        expect(atom.workspace.getPanes()).toHaveLength nPanes + 1
         expect(workspaceElement.querySelector('.log-view')).not.toExist()
 
         atom.workspace.activatePreviousPane()
@@ -74,8 +75,8 @@ describe "Log", ->
     it "toggles on grammar change from log", ->
       atom.config.set 'language-log.showFilterBar', true
       waitsForPromise ->
-        atom.packages.activatePackage('language-text')
         atom.workspace.open 'android.log'
+        atom.packages.activatePackage('language-text')
       runs ->
         expect(workspaceElement.querySelector('.log-view')).toExist()
         item = atom.workspace.getActivePaneItem()
