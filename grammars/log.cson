@@ -201,6 +201,12 @@
       {
         'match': '\\[[a-zA-Z]+ [0-9]+ [^ ]*\\]'
         'name': 'definition.log.log-info'
+      },
+      {
+        'match': '\\b([a-z]+) ([a-zA-Z_-]+)\\[[0-9]+\\]:'
+        'captures':
+          '1': 'name': 'definition.log.log-verbose.user'
+          '2': 'name': 'definition.log.keyword.process'
       }
     ]
   'apache':

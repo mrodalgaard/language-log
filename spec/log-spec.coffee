@@ -158,7 +158,23 @@ describe 'Atom log grammar', ->
     line = 'May 11 10:40:48 scrooge disk-health-nurse[26783]: [ID 702911 user.error] m:SY-mon-full-500 c:H : partition'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: 'May 11 10:40:48', scopes: ['source.log', 'definition.comment.timestamp.log']
-    expect(tokens[2]).toEqual value: '[ID 702911 user.error]', scopes: ['source.log', 'definition.log.log-info']
+    expect(tokens[2]).toEqual value: 'scrooge', scopes: ['source.log', 'definition.log.log-verbose.user']
+    expect(tokens[4]).toEqual value: 'disk-health-nurse', scopes: ['source.log', 'definition.log.keyword.process']
+    expect(tokens[7]).toEqual value: '[ID 702911 user.error]', scopes: ['source.log', 'definition.log.log-info']
+
+    line = 'Aug  7 20:30:09 ubuntu avahi-daemon[1527]: Succesfully dropped'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: 'Aug  7 20:30:09', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'ubuntu', scopes: ['source.log', 'definition.log.log-verbose.user']
+    expect(tokens[4]).toEqual value: 'avahi-daemon', scopes: ['source.log', 'definition.log.keyword.process']
+    expect(tokens[6]).toEqual value: ' Succesfully dropped', scopes: ['source.log']
+
+    line = 'May 11 10:00:39 scrooge SG_child[808]: [ID 748625 user.info] m:WR-SG-SUMMARY'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: 'May 11 10:00:39', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: 'scrooge', scopes: ['source.log', 'definition.log.log-verbose.user']
+    expect(tokens[4]).toEqual value: 'SG_child', scopes: ['source.log', 'definition.log.keyword.process']
+    expect(tokens[7]).toEqual value: '[ID 748625 user.info]', scopes: ['source.log', 'definition.log.log-info']
 
   it 'parses Apache logs', ->
     expect(getGrammar('64.242.88.10 - - [07/Mar/2004:16:45:56 -0800]')).toBe 'Log'
