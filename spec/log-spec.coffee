@@ -159,21 +159,21 @@ describe 'Atom log grammar', ->
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: 'May 11 10:40:48', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: 'scrooge', scopes: ['source.log', 'definition.log.log-verbose.user']
-    expect(tokens[4]).toEqual value: 'disk-health-nurse', scopes: ['source.log', 'definition.log.keyword.process']
+    expect(tokens[4]).toEqual value: 'disk-health-nurse', scopes: ['source.log', 'definition.log.function.support.process']
     expect(tokens[7]).toEqual value: '[ID 702911 user.error]', scopes: ['source.log', 'definition.log.log-info']
 
     line = 'Aug  7 20:30:09 ubuntu avahi-daemon[1527]: Succesfully dropped'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: 'Aug  7 20:30:09', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: 'ubuntu', scopes: ['source.log', 'definition.log.log-verbose.user']
-    expect(tokens[4]).toEqual value: 'avahi-daemon', scopes: ['source.log', 'definition.log.keyword.process']
+    expect(tokens[4]).toEqual value: 'avahi-daemon', scopes: ['source.log', 'definition.log.function.support.process']
     expect(tokens[6]).toEqual value: ' Succesfully dropped', scopes: ['source.log']
 
     line = 'May 11 10:00:39 scrooge SG_child[808]: [ID 748625 user.info] m:WR-SG-SUMMARY'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: 'May 11 10:00:39', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: 'scrooge', scopes: ['source.log', 'definition.log.log-verbose.user']
-    expect(tokens[4]).toEqual value: 'SG_child', scopes: ['source.log', 'definition.log.keyword.process']
+    expect(tokens[4]).toEqual value: 'SG_child', scopes: ['source.log', 'definition.log.function.support.process']
     expect(tokens[7]).toEqual value: '[ID 748625 user.info]', scopes: ['source.log', 'definition.log.log-info']
 
   it 'parses Apache logs', ->
@@ -448,3 +448,16 @@ describe 'Atom log grammar', ->
     expect(tokens[0]).toEqual value: '2008-11-08 06:37:31.730609500', scopes: ['source.log', 'definition.comment.timestamp.log']
     expect(tokens[2]).toEqual value: '87.103.146.91:5555', scopes: ['source.log', 'keyword.log.ip']
     expect(tokens[8]).toEqual value: "http://www.spamhaus.org/query/bl?ip=87.103.146.91", scopes: ['source.log', 'keyword.log.url']
+
+  it 'parses python logs', ->
+    line = "NOTSET:__main__:creating users..."
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: 'NOTSET', scopes: ['source.log', 'definition.log.log-debug']
+    expect(tokens[2]).toEqual value: '__main__', scopes: ['source.log', 'definition.log.function.support.process']
+    expect(tokens[4]).toEqual value: "creating users...", scopes: ['source.log']
+
+    line = 'WARN:urllib3.connectionpool:http://b986ccce8a10:35357 "GET /v3/users" 200 1337'
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: 'WARN', scopes: ['source.log', 'definition.log.log-warning']
+    expect(tokens[2]).toEqual value: 'urllib3.connectionpool', scopes: ['source.log', 'definition.log.function.support.process']
+    expect(tokens[4]).toEqual value: "http://b986ccce8a10:35357", scopes: ['source.log', 'keyword.log.url']

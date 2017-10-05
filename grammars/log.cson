@@ -24,6 +24,7 @@
 'patterns': [
   {'include': '#general'}
   {'include': '#timestamps'}
+  {'include': '#python'}
   {'include': '#android'}
   {'include': '#ios'}
   {'include': '#idea'}
@@ -107,6 +108,29 @@
         ( [A-Z]{3,4}\\])?\
         ((\\]| [-+][0-9]{4}\\]))?'
         'name': 'definition.comment.timestamp.log'
+      }
+    ]
+  'python':
+    'patterns': [
+      {
+        'match': '^(DEBUG|NOTSET)'
+        'name': 'definition.log.log-debug'
+      }
+      {
+        'match': '^INFO'
+        'name': 'definition.log.log-info'
+      }
+      {
+        'match': '^(WARNING|WARN)'
+        'name': 'definition.log.log-warning'
+      }
+      {
+        'match': '^(ERROR|CRITICAL)'
+        'name': 'definition.log.log-error'
+      }
+      {
+        'match': ':([a-zA-Z0-9._]+):'
+        'captures': '1': 'name': 'definition.log.function.support.process'
       }
     ]
   'android':
@@ -206,7 +230,7 @@
         'match': '\\b([a-z]+) ([a-zA-Z_-]+)\\[[0-9]+\\]:'
         'captures':
           '1': 'name': 'definition.log.log-verbose.user'
-          '2': 'name': 'definition.log.keyword.process'
+          '2': 'name': 'definition.log.function.support.process'
       }
     ]
   'apache':
