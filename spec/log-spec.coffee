@@ -127,12 +127,14 @@ describe 'Atom log grammar', ->
     line = '[2015-09-17 16:37:57 CEST] <main> INFO: Configuration refresh successful.'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '[2015-09-17 16:37:57 CEST]', scopes: ['source.log', 'definition.comment.timestamp.log']
-    expect(tokens[2]).toEqual value: 'INFO', scopes: ['source.log', 'definition.log.log-info']
+    expect(tokens[2]).toEqual value: '<main>', scopes: ['source.log', 'definition.log.function.support.mark']
+    expect(tokens[4]).toEqual value: 'INFO', scopes: ['source.log', 'definition.log.log-info']
 
     line = '[2015-09-17 16:37:59 CEST] <main> DBG-X:   parameter BaseVersion = 1.8.3'
     {tokens} = grammar.tokenizeLine(line)
     expect(tokens[0]).toEqual value: '[2015-09-17 16:37:59 CEST]', scopes: ['source.log', 'definition.comment.timestamp.log']
-    expect(tokens[2]).toEqual value: 'DBG-X', scopes: ['source.log', 'definition.log.log-debug']
+    expect(tokens[2]).toEqual value: '<main>', scopes: ['source.log', 'definition.log.function.support.mark']
+    expect(tokens[4]).toEqual value: 'DBG-X', scopes: ['source.log', 'definition.log.log-debug']
 
   it 'parses IDEA logs', ->
     expect(getGrammar('2014-12-11 14:00:36,047 [ 200232]   INFO')).toBe 'Log'
