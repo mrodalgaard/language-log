@@ -1,0 +1,18 @@
+{
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "Language-log",
+          "submenu": [
+            {
+              "label": "Toggle filter",
+              "command": "log:toggle-log-panel"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
