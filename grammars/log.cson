@@ -88,6 +88,10 @@
         'match': '<?\\w+([-+.\']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*?>'
         'name': 'log.string.mail'
       }
+      {
+        'match': '<[a-z][a-z0-9]+>'
+        'name': 'definition.log.function.support.mark'
+      }
     ]
   'timestamps':
     'patterns': [
