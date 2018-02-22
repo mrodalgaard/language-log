@@ -461,3 +461,12 @@ describe 'Atom log grammar', ->
     expect(tokens[0]).toEqual value: 'WARN', scopes: ['source.log', 'definition.log.log-warning']
     expect(tokens[2]).toEqual value: 'urllib3.connectionpool', scopes: ['source.log', 'definition.log.function.support.process']
     expect(tokens[4]).toEqual value: "http://b986ccce8a10:35357", scopes: ['source.log', 'keyword.log.url']
+
+  it 'parses fastlane logs', ->
+    expect(getGrammar('2017-08-31T08:47:38.8604160Z [10:47:38]: Yo')).toBe 'Log'
+
+    line = "2017-08-31T08:47:38.8604160Z [10:47:38]: Your fastlane version 2.17.1 matches the minimum requirement of 1.107.0  ?"
+    {tokens} = grammar.tokenizeLine(line)
+    expect(tokens[0]).toEqual value: '2017-08-31T08:47:38.8604160Z', scopes: ['source.log', 'definition.comment.timestamp.log']
+    expect(tokens[2]).toEqual value: '[10:47:38]', scopes: ['source.log', 'variable.log.fastlane.time']
+    expect(tokens[4]).toEqual value: "version 2.17.1", scopes: ['source.log', 'keyword.log.version']
