@@ -28,6 +28,19 @@
     }
   }
 
+  .close-button {
+    margin-left: @component-padding * 2;
+    cursor: pointer;
+    color: @text-color-subtle;
+    &:hover {
+      color: @text-color-highlight;
+    }
+    .icon::before {
+      margin-right: 0;
+      text-align: center;
+    }
+  }
+
   .icon-scroll {
     background: @text-color-success !important;
     &::before {

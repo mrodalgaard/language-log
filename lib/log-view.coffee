@@ -25,6 +25,8 @@ class LogView extends View
     @div tabIndex: -1, class: 'log-view', =>
       @header class: 'header', =>
         @span 'Log Filter'
+        @span outlet: 'closeButton', class: 'pull-right close-button', =>
+          @i class: 'icon icon-x'
         @span class: 'pull-right', 'Level Filters'
         @span outlet: 'descriptionLabel', class: 'description'
         @span outlet: 'descriptionWarningLabel', class: 'description warning'
@@ -84,13 +86,17 @@ class LogView extends View
       title: "Toggle Warning Level"
     @disposables.add atom.tooltips.add @levelErrorButton,
       title: "Toggle Error Level"
+    @disposables.add atom.tooltips.add @closeButton,
+      title: "Close Panel <span class=\"keystroke\">Esc</span>"
+      html: true
 
   handleEvents: ->
     @disposables.add atom.commands.add @filterEditorView.element,
       'core:confirm': => @confirm()
 
     @disposables.add atom.commands.add @element,
-      'core:cancel': => @focusTextEditor()
+      'core:cancel': => @destroyPanel()
+      'core:close': => @destroyPanel()
 
     @disposables.add @logFilter.onDidFinishFilter =>
       @updateDescription()
@@ -103,6 +109,7 @@ class LogView extends View
     @levelDebugButton.on 'click', => @toggleButton('debug')
     @levelWarningButton.on 'click', => @toggleButton('warning')
     @levelErrorButton.on 'click', => @toggleButton('error')
+    @closeButton.on 'click', => @destroyPanel()
 
     @filterEditorView.getModel().onDidStopChanging =>
       @liveFilter()
@@ -120,6 +127,13 @@ class LogView extends View
   destroy: ->
     @disposables.dispose()
     @detach()
+
+  destroyPanel: ->
+    panel = atom.workspace.panelForItem(this)
+    panel?.destroy()
+    panel = null
+    @textEditor = null
+    @destroy()
 
   toggleTail: ->
     atom.config.set('language-log.tail', !atom.config.get('language-log.tail'))

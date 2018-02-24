@@ -40,8 +40,9 @@ module.exports = LanguageLog =
 
     @disposables.add atom.workspace.observeActivePaneItem (item) =>
       @itemUpdate(item)
-      
-    atom.commands.add 'atom-workspace', 'log:toggle-log-panel', => @toggleLogPanel()
+
+    atom.commands.add 'atom-workspace', 'log:toggle-log-panel', =>
+      @toggleLogPanel()
 
   deactivate: ->
     @disposables.dispose()
@@ -71,7 +72,7 @@ module.exports = LanguageLog =
     @logPanel = null
 
   toggleLogPanel: ->
-    if @logPanel?
+    if @logPanel? and !@logPanel.destroyed
       @removeLogPanel()
     else
       @addLogPanel(atom.workspace.getActiveTextEditor())
