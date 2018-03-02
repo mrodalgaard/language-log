@@ -2,6 +2,7 @@
 {CompositeDisposable, TextBuffer, Point} = require 'atom'
 
 LogFilter = require './log-filter'
+{formatTimestamp} = require './util'
 
 deprecatedTextEditor = (params) ->
   if atom.workspace.buildTextEditor?
@@ -23,6 +24,15 @@ class LogView extends View
     )
 
     @div tabIndex: -1, class: 'log-view', =>
+      @section outlet: 'timestamps', =>
+        @div class: 'input-block log-timestamps', =>
+          @code outlet: 'timestampStart'
+          @div class: 'input-block-item input-block-item--flex', =>
+            @i class: 'icon icon-chevron-left'
+            @div class: 'log-timestamps-line'
+            @i class: 'icon icon-chevron-right'
+          @code outlet: 'timestampEnd'
+
       @header class: 'header', =>
         @span 'Log Filter'
         @span outlet: 'closeButton', class: 'pull-right close-button', =>
@@ -55,6 +65,8 @@ class LogView extends View
 
   initialize: ->
     @disposables = new CompositeDisposable
+
+    @timestamps.hide()
 
     @logFilter = new LogFilter(@textEditor)
     @tailing = false
@@ -117,6 +129,12 @@ class LogView extends View
     @textEditor.onDidStopChanging =>
       @tail()
       @updateDescription()
+
+    if @textEditor.tokenizedBuffer?.fullyTokenized
+      @updateTimestamps()
+    else
+      @textEditor.onDidTokenize =>
+        @updateTimestamps()
 
     @on 'focus', => @filterEditorView.focus()
 
@@ -198,6 +216,16 @@ class LogView extends View
     else
       ""
     )
+
+  updateTimestamps: ->
+    timestampStart = @logFilter.getFirstTimestamp()
+    timestampEnd = @logFilter.getLastTimestamp()
+
+    return @timestamps.hide() unless timestampStart and timestampEnd
+
+    @timestampStart.text formatTimestamp(timestampStart)
+    @timestampEnd.text formatTimestamp(timestampEnd)
+    @timestamps.show()
 
   tail: ->
     return unless atom.config.get('language-log.tail') and @textEditor

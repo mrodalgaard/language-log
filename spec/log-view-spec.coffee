@@ -250,6 +250,27 @@ describe "LogView", ->
       atom.config.set('language-log.adjacentLines', 2)
       expect(getFilteredLines()).toBe "012"
 
+  describe "show timestamps", ->
+    it "shows timestamp start and timestamp end", ->
+      waitsForPromise ->
+        atom.packages.activatePackage('language-log')
+      runs ->
+        grammar = atom.grammars.grammarForScopeName('source.log')
+
+        logView.textEditor.setText """
+        11-13-15 05:51:46.949: D/dalvikvm(159): GC_FOR_ALLOC freed 104K, 6% free
+        11-13-15 05:51:52.279: D/NDK_DEBUG(1359): RUN APPLICATION
+        11-13-15 05:51:52.379: I/DEBUG(5441): fingerprint: 'generic/sdk/generic'
+        """
+
+        logView.textEditor.setGrammar(grammar)
+
+        waitsFor ->
+          logView.timestampEnd.text() != ''
+        runs ->
+          expect(logView.timestampStart.text()).toBe '13-11-2015 05:51:46'
+          expect(logView.timestampEnd.text()).toBe '13-11-2015 05:51:52'
+
   describe "timestamp extraction", ->
     beforeEach ->
       waitsForPromise ->

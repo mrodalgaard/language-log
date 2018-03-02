@@ -188,14 +188,20 @@ class LogFilter
   removeFilter: ->
     @textEditor.unfoldAll()
 
+  getFirstTimestamp: ->
+    @getLineTimestamp(0)
+
+  getLastTimestamp: ->
+    # Check last 3 lines for a timestamp
+    for n in [1..3]
+      if timestamp = @getLineTimestamp(@textEditor.getLineCount() - n)
+        return timestamp
+
   getLineTimestamp: (lineNumber) ->
+    # The timestamp might not be the first element on the line
     for pos in [0..30] by 10
       point = new Point(lineNumber, pos)
-      # DEPRECATED
-      # range = @textEditor.displayBuffer.bufferRangeForScopeAtPosition('timestamp', point)
-      # REPLACEMENT
-      @textEditor.setCursorBufferPosition(point)
-      range = @textEditor.bufferRangeForScopeAtCursor('timestamp')
+      range = @textEditor.bufferRangeForScopeAtPosition('timestamp', point)
 
       if range and timestamp = @textEditor.getTextInRange(range)
         return @parseTimestamp(timestamp)
