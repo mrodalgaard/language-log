@@ -21,6 +21,8 @@ There are a whole bunch of standard and non-standard log formats out there. Crea
 
 ## Notes
 
+When asking for a certain log type support, please provide an example log file showing the general format and the different log levels.
+
 Files above 10,000 lines does not get grammar applied according to Atom.
 
 > Contributions, bug reports and feature requests are very welcome.
