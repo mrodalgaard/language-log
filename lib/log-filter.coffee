@@ -194,7 +194,10 @@ class LogFilter
   getLastTimestamp: ->
     # Check last 3 lines for a timestamp
     for n in [1..3]
-      if timestamp = @getLineTimestamp(@textEditor.getLineCount() - n)
+      pos = @textEditor.getLineCount() - n
+      return unless pos > 0
+
+      if timestamp = @getLineTimestamp(pos)
         return timestamp
 
   getLineTimestamp: (lineNumber) ->
