@@ -1,5 +1,7 @@
 # Log syntax highlighting and filtering in Atom [![Build Status](https://travis-ci.org/mrodalgaard/language-log.svg)](https://travis-ci.org/mrodalgaard/language-log)
 
+> DEPRECATED: This package will no longer be maintained by me since I have switched permanently to VSCode.
+
 Adds syntax colors for common log formats in [Atom](https://atom.io/) - improving visual grepping.
 
 Also adds a filtering bottom bar to separate out the statements you are not interested in (can be removed through package config).
